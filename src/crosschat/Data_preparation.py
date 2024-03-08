@@ -844,7 +844,7 @@ def get_Markov_time_ls(all_results,comm_levels):
         Markov_time_ls.append(T)
     '''
     for i in comm_levels:
-        step = np.where(all_results['number_of_communities'] == i)[0][0]
+        step = np.where(np.asarray(all_results['number_of_communities']) == i)[0][0]
         T = all_results['scales'][step]
         Markov_time_ls.append(T)
 

@@ -155,7 +155,7 @@ class CrossChatT(object):
                                           tree_scales=tree_scales)
             self.lr_trees = trees
 
-    def Draw_MMT(self,type="l",tree_inds=None):
+    def Draw_MMT(self,type="l",tree_inds=None,nodesize=20):
         # type is l,r
         if type == "l":
             trees = self.ligand_trees
@@ -178,7 +178,7 @@ class CrossChatT(object):
                 node_mapping_dict[node] = ind
             size_ls = get_cluster_size_ls(tree_node_onehot_ls)
             draw_MMT(trees[tree_ind], node_pos, size_ls, lr_ls=lr_ls,
-                     lr_node_mapping_dict=node_mapping_dict, nodesize=20)
+                     lr_node_mapping_dict=node_mapping_dict, nodesize=nodesize)
 
     def Draw_MMT_lr_union(self,tree_inds=None):
 
