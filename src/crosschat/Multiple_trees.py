@@ -3,6 +3,7 @@ import numpy as np
 import networkx as nx
 import time
 import logging
+from itertools import product
 
 def bron_kerbosch(graph, r=set(), p=None, x=set()):
     if p is None:
@@ -125,4 +126,12 @@ def find_multiscale_trees(lr_sup_mtx, remove_cells_prop=0.95, support_size_thres
     final_trees = [set_to_tree(s, support, inclusive_threshold) for s in unique_sorted_trees]
 
     return final_trees
+
+def interaction_btw_trees(ligand_tree, receptor_tree, LR_ind_list):
+    #LR_ind_list: existing LR pairs from database in all_LR_filtered
+    lr_pairs = product(list(ligand_tree.nodes), list(receptor_tree.nodes))
+
+    return list(set(lr_pairs).intersection(set(LR_ind_list)))
+
+
 

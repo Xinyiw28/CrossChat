@@ -10,39 +10,39 @@ from sklearn.metrics.cluster import adjusted_rand_score
 import os
 import commot as ct
 from sklearn.cluster import KMeans
-
+import umap
 
 def load_files(species='human'):
     """
-    load_files loads the files needed for CCI calculation
+    load_files loads the files needed for CCC calculation
 
     :return: all_LR is the set of LR pairs in the database
         cofactor_input is the set of cofactors of LR pairs
         complex_input is the set of genes corresponding to each complex gene unit
         """
     if species == 'mouse':
-        all_LR = pd.read_csv('./Input_files/mouse_CellChatDB_LR_pairs_noECM.csv',delimiter=',')
+        all_LR = pd.read_csv('../src/crosschat/Input_files/mouse_CellChatDB_LR_pairs.csv', delimiter=',')
         all_LR_cap = all_LR.copy()
         all_LR_cap[['Ligand', 'Receptor']] = all_LR_cap[['Ligand', 'Receptor']].applymap(lambda s: s.upper())
         all_LR = all_LR_cap.copy()
-        cofactor_input = pd.read_csv('./Input_files/mouse_cofactor_input.csv', delimiter=',')
+        cofactor_input = pd.read_csv('../src/crosschat/Input_files/mouse_cofactor_input.csv', delimiter=',')
         cofactor_input_cap = cofactor_input[[f'cofactor{i}' for i in range(1, 17)]].applymap(lambda s: str(s).upper())
         cofactor_input_cap['name'] = cofactor_input['name']
         cofactor_input = cofactor_input_cap.copy()
-        complex_input = pd.read_csv('./Input_files/mouse_complex_input.csv',delimiter=',').astype(str)
+        complex_input = pd.read_csv('../src/crosschat/Input_files/mouse_complex_input.csv',delimiter=',').astype(str)
         complex_input_cap = complex_input[[f'subunit_{i}' for i in range(1, 5)]].applymap(lambda s: str(s).upper())
         complex_input_cap['name'] = complex_input['name'].map(lambda s: str(s).upper())
         complex_input = complex_input_cap.copy()
     if species == 'human':
-        all_LR = pd.read_csv('./Input_files/human_CellChatDB_LR_pairs_noECM.csv',delimiter=',')
+        all_LR = pd.read_csv('../src/crosschat/Input_files/human_CellChatDB_LR_pairs.csv', delimiter=',')
         all_LR_cap = all_LR.copy()
         all_LR_cap[['Ligand', 'Receptor']] = all_LR_cap[['Ligand', 'Receptor']].applymap(lambda s: s.upper())
         all_LR = all_LR_cap.copy()
-        cofactor_input = pd.read_csv('./Input_files/human_cofactor_input.csv', delimiter=',')
+        cofactor_input = pd.read_csv('../src/crosschat/Input_files/human_cofactor_input.csv', delimiter=',')
         cofactor_input_cap = cofactor_input[[f'cofactor{i}' for i in range(1, 17)]].applymap(lambda s: str(s).upper())
         cofactor_input_cap['name'] = cofactor_input['name']
         cofactor_input = cofactor_input_cap.copy()
-        complex_input = pd.read_csv('./Input_files/human_complex_input.csv',delimiter=',').astype(str)
+        complex_input = pd.read_csv('../src/crosschat/Input_files/human_complex_input.csv',delimiter=',').astype(str)
         complex_input_cap = complex_input[[f'subunit_{i}' for i in range(1, 5)]].applymap(lambda s: str(s).upper())
         complex_input_cap['name'] = complex_input['name'].map(lambda s: str(s).upper())
         complex_input = complex_input_cap.copy()
@@ -98,13 +98,14 @@ def create_adata(ds_mtx=None, ds_geneNames:pd.DataFrame=None, ds_annotations:pd.
         adata.var_names = ds_geneNames
     return adata
 
-def prepare_adata(adata, normalized=False, scaled=False, input='allgenes'):
-    if normalized == False:
+def prepare_adata(adata, normalize=False, scale=False, input='allgenes'):
+    #
+    if normalize == True:
         sc.pp.normalize_total(adata, target_sum=1e4)
         sc.pp.log1p(adata)
     if input=='allgenes':
         sc.pp.highly_variable_genes(adata, n_top_genes=2000)
-    if scaled == False:
+    if scale == True:
         sc.pp.scale(adata, max_value=10)
     sc.tl.pca(adata, svd_solver='arpack')
     sc.pp.neighbors(adata)
@@ -268,10 +269,10 @@ def prepare_lr_sup_mtx(all_LR,complex_input,lr='L',ds_mtx=None,ds_geneNames=None
     lr_indices = dict()
     for name in separate_lr:
         for gene in name:
-            if len(ds_geneNames.loc[ds_geneNames == gene.upper()].index) > 0:
-                lr_indices[gene] = ds_geneNames.loc[ds_geneNames == gene.upper()].index[0]
+            if len(ds_geneNames.loc[ds_geneNames[0] == gene.upper()].index) > 0:
+                lr_indices[gene] = ds_geneNames.loc[ds_geneNames[0] == gene.upper()].index[0]
             else:
-                lr_indices[gene] = 1e5
+                lr_indices[gene] = 1e6
 
     lr_ind = dict()
     for i,gene in enumerate(lr_ls):
@@ -282,7 +283,7 @@ def prepare_lr_sup_mtx(all_LR,complex_input,lr='L',ds_mtx=None,ds_geneNames=None
 
     for i, gene_name in enumerate(separate_lr):
         for gene in gene_name:
-            if lr_indices[gene] < 1e5:
+            if lr_indices[gene] < 1e6:
                 lr_sup_mtx[i, :] *= np.squeeze(np.asarray(ds_mtx[lr_indices[gene]].todense()))
             else:
                 lr_sup_mtx[i, :] *= 0
@@ -343,14 +344,14 @@ def draw_multiscale_umap(cluster_input,adata,all_results,comm_levels,selected_pa
         for i,comm_level in enumerate(comm_levels):
             adata.uns[f'{cluster_input}_community_{comm_level}_colors'] = node_color_ls[i]
             if save == True:
-                sc.pl.umap(adata, color=f"{cluster_input}_community_{comm_level}",save=f'{cluster_input}_community_{comm_level}.pdf')
+                sc.pl.umap(adata, color=f"{cluster_input}_community_{comm_level}")
             else:
                 sc.pl.umap(adata, color=f"{cluster_input}_community_{comm_level}")
     else:
         for i,comm_level in enumerate(comm_levels):
             adata.uns[f'{cluster_input}_community_{comm_level}_colors'] = node_color_ls[i]
             if save == True:
-                sc.pl.embedding(adata, basis="spatial", color=f"{cluster_input}_community_{comm_level}",save=f'{cluster_input}_community_{comm_level}.pdf')
+                sc.pl.embedding(adata, basis="spatial", color=f"{cluster_input}_community_{comm_level}")
             else:
                 sc.pl.embedding(adata, basis="spatial", color=f"{cluster_input}_community_{comm_level}")
 
@@ -382,7 +383,7 @@ def get_gene_exp(gene,ds_geneNames,ds_mtx):
     :return: gene expression of input gene
     """
     ncells = np.shape(ds_mtx)[1]
-    gene_ind = np.where(ds_geneNames==gene.upper())[0]
+    gene_ind = np.where(ds_geneNames[0]==gene.upper())[0]
 
     if len(gene_ind) == 0:
         gene_exp = np.zeros(ncells)
@@ -709,15 +710,15 @@ def compute_interaction(LR_ind,cluster1_onehot,cluster2_onehot,all_LR,ligand_exp
 
     return P
 
-def get_CCI_mtx(all_LR, ligands_ls, receptors_ls, ligand_clusters, receptor_clusters,ligand_exp_dict,receptor_exp_dict,
-                cofactor_exp_dict, CCI_threshold):
+def get_CCC_mtx(all_LR, ligands_ls, receptors_ls, ligand_clusters, receptor_clusters,ligand_exp_dict,receptor_exp_dict,
+                cofactor_exp_dict, CCC_threshold):
     """
-    get_CCI_mtx obtains total interaction matrix between set of ligands with ligands_indices (in L_ls, can be ligand complex) and receptors
+    get_CCC_mtx obtains total interaction matrix between set of ligands with ligands_indices (in L_ls, can be ligand complex) and receptors
     with receptors_indices (in R_ls), between the input multiscale ligand_clusters and multiscale receptor_clusters
 
     :ligands_ls: list of ligands
     :ligand_clusters: list of arrays of multiscale ligand clusters
-    :return: CCI_mtx is the total interaction matrix
+    :return: CCC_mtx is the total interaction matrix
     """
 
     LR_indices_in_all_LR = [] # List of indices of interacting LR paris in all_LR
@@ -725,67 +726,67 @@ def get_CCI_mtx(all_LR, ligands_ls, receptors_ls, ligand_clusters, receptor_clus
         if all_LR['Ligand'].iloc[i] in ligands_ls and all_LR['Receptor'].iloc[i] in receptors_ls:
             LR_indices_in_all_LR.append(i)
 
-    CCI_mtx_ls = []
+    CCC_mtx_ls = []
 
     for n_LR in LR_indices_in_all_LR:
-        LR_CCI = dict()
+        LR_CCC = dict()
         for L_scale in range(len(ligand_clusters)):
             for R_scale in range(len(receptor_clusters)):
                 n_L_clusters = len(ligand_clusters[L_scale])
                 n_R_clusters = len(receptor_clusters[R_scale])
-                CCI_mtx = np.zeros((n_L_clusters, n_R_clusters))
+                CCC_mtx = np.zeros((n_L_clusters, n_R_clusters))
 
                 for L_scale_cluster in range(n_L_clusters):
                     for R_scale_cluster in range(n_R_clusters):
                         ligand_onehot = ligand_clusters[L_scale][L_scale_cluster]
                         receptor_onehot = receptor_clusters[R_scale][R_scale_cluster]
-                        CCI_mtx[L_scale_cluster, R_scale_cluster] = compute_interaction(n_LR, ligand_onehot,
+                        CCC_mtx[L_scale_cluster, R_scale_cluster] = compute_interaction(n_LR, ligand_onehot,
                                 receptor_onehot, all_LR, ligand_exp_dict, receptor_exp_dict, cofactor_exp_dict)
-                LR_CCI[(L_scale, R_scale)] = CCI_mtx
+                LR_CCC[(L_scale, R_scale)] = CCC_mtx
 
-        CCI_mtx_ls.append(LR_CCI)
+        CCC_mtx_ls.append(LR_CCC)
 
-    total_CCI_mtx = dict()
+    total_CCC_mtx = dict()
     for L_scale in range(len(ligand_clusters)):
         for R_scale in range(len(receptor_clusters)):
             n_L_clusters = len(ligand_clusters[L_scale])
             n_R_clusters = len(receptor_clusters[R_scale])
-            total_CCI_mtx[(L_scale,R_scale)] = np.zeros((n_L_clusters,n_R_clusters))
-    for i in range(len(CCI_mtx_ls)):
+            total_CCC_mtx[(L_scale,R_scale)] = np.zeros((n_L_clusters,n_R_clusters))
+    for i in range(len(CCC_mtx_ls)):
         for L_scale in range(len(ligand_clusters)):
             for R_scale in range(len(receptor_clusters)):
-                total_CCI_mtx[(L_scale,R_scale)] += CCI_mtx_ls[i][(L_scale,R_scale)]
-                total_CCI_mtx[(L_scale, R_scale)][total_CCI_mtx[(L_scale, R_scale)] < CCI_threshold] = 0
+                total_CCC_mtx[(L_scale,R_scale)] += CCC_mtx_ls[i][(L_scale,R_scale)]
+                total_CCC_mtx[(L_scale, R_scale)][total_CCC_mtx[(L_scale, R_scale)] < CCC_threshold] = 0
 
-    return total_CCI_mtx
+    return total_CCC_mtx
 
-def get_CCI_mtx_from_COMMOT(adata, l_r_pathway, ligand_clusters, receptor_clusters, CCI_threshold=0, normalize=True):
+def get_CCC_mtx_from_COMMOT(adata, l_r_pathway, ligand_clusters, receptor_clusters, CCC_threshold=0, normalize=True):
     #l_r_pathway: a tuple as ['Igf2', 'Igf2r', 'Igf_pathway']
     l_r_pathway_ls = np.array([l_r_pathway],dtype=str)
     df_ligrec = pd.DataFrame(data=l_r_pathway_ls)
     ct.tl.spatial_communication(adata, database_name='user_database', df_ligrec=df_ligrec, dis_thr=200, heteromeric=True)
     commot_mtx_sc = adata.obsp[f'commot-user_database-{l_r_pathway[0]}-{l_r_pathway[1]}'].todense()
 
-    LR_CCI = dict()
+    LR_CCC = dict()
     for L_scale in range(len(ligand_clusters)):
         for R_scale in range(len(receptor_clusters)):
             n_L_clusters = len(ligand_clusters[L_scale])
             n_R_clusters = len(receptor_clusters[R_scale])
-            CCI_mtx = np.zeros((n_L_clusters, n_R_clusters))
+            CCC_mtx = np.zeros((n_L_clusters, n_R_clusters))
 
             for L_scale_cluster in range(n_L_clusters):
                 for R_scale_cluster in range(n_R_clusters):
                     ligand_onehot = ligand_clusters[L_scale][L_scale_cluster]
                     receptor_onehot = receptor_clusters[R_scale][R_scale_cluster]
                     if normalize:
-                        CCI_mtx[L_scale_cluster, R_scale_cluster] = np.sum(
+                        CCC_mtx[L_scale_cluster, R_scale_cluster] = np.sum(
                             commot_mtx_sc[np.nonzero(ligand_onehot)[0], :][:, np.nonzero(receptor_onehot)[0]]) / (np.sum(ligand_onehot) * np.sum(receptor_onehot))
                     else:
-                        CCI_mtx[L_scale_cluster, R_scale_cluster] = np.sum(commot_mtx_sc[np.nonzero(ligand_onehot)[0], :][:, np.nonzero(receptor_onehot)[0]])
-            CCI_mtx[CCI_mtx < 0] = 0
-            LR_CCI[(L_scale, R_scale)] = CCI_mtx
+                        CCC_mtx[L_scale_cluster, R_scale_cluster] = np.sum(commot_mtx_sc[np.nonzero(ligand_onehot)[0], :][:, np.nonzero(receptor_onehot)[0]])
+            CCC_mtx[CCC_mtx < 0] = 0
+            LR_CCC[(L_scale, R_scale)] = CCC_mtx
 
-    return LR_CCI
+    return LR_CCC
 
 def get_cluster_size_ls(onehot_ls):
     """
@@ -849,10 +850,11 @@ def get_Markov_time_ls(all_results,comm_levels):
 
     return Markov_time_ls
 
-def get_lr_exp_in_allgenes_clusters(n_specific_LR,allgenes_onehot_ls,all_LR_filtered_sorted,ligand_exp_dict,receptor_exp_dict):
+def get_lr_exp_in_clusters(LR_ls,L_onehot_ls,R_onehot_ls,ligand_exp_dict,receptor_exp_dict):
     """
     get_lr_exp_in_clusters obtain the list of markov times corresponding to selected community levels
 
+    :param LR_ls: list of [[L1,R1],[L2,R2],...]
     :param all_results: output of multiscale clustering results
     :param comm_levels: selected community levels
     :return: Markov_time_ls is the list of markov times corresponding to selected community levels,
@@ -860,24 +862,23 @@ def get_lr_exp_in_allgenes_clusters(n_specific_LR,allgenes_onehot_ls,all_LR_filt
     """
     L_exp_ls = []
     R_exp_ls = []
-    for i in range(n_specific_LR):
-        ligand = all_LR_filtered_sorted.iloc[i]['Ligand']
-        receptor = all_LR_filtered_sorted.iloc[i]['Receptor']
-        ligand_exp = compute_genes_geo_avg_vector(ligand_exp_dict[all_LR_filtered_sorted.iloc[i]['Ligand']])
-        receptor_exp = compute_genes_geo_avg_vector(receptor_exp_dict[all_LR_filtered_sorted.iloc[i]['Receptor']])
+    for i in range(len(LR_ls)):
+        ligand,receptor = LR_ls[i]
+        ligand_exp = compute_genes_geo_avg_vector(ligand_exp_dict[ligand])
+        receptor_exp = compute_genes_geo_avg_vector(receptor_exp_dict[receptor])
         L_exp_ls.append(ligand_exp)
         R_exp_ls.append(receptor_exp)
 
     L_exp_in_clusters = []  # ligand expression average in each multiscale cluster for all pathways
     R_exp_in_clusters = []
 
-    for k in range(n_specific_LR):
+    for k in range(len(LR_ls)):
         L_k = []
         R_k = []
-        for i in range(len(allgenes_onehot_ls)):
-            L_k.append(np.matmul(allgenes_onehot_ls[i], L_exp_ls[k]) / np.sum(allgenes_onehot_ls[i], axis=1))
-        for i in range(len(allgenes_onehot_ls)):
-            R_k.append(np.matmul(allgenes_onehot_ls[i], R_exp_ls[k]) / np.sum(allgenes_onehot_ls[i], axis=1))
+        for i in range(len(L_onehot_ls)):
+            L_k.append(np.matmul(L_onehot_ls[i], L_exp_ls[k]) / np.sum(L_onehot_ls[i], axis=1))
+        for i in range(len(R_onehot_ls)):
+            R_k.append(np.matmul(R_onehot_ls[i], R_exp_ls[k]) / np.sum(R_onehot_ls[i], axis=1))
         L_exp_in_clusters.append(np.concatenate(L_k, axis=0))
         R_exp_in_clusters.append(np.concatenate(R_k, axis=0))
 
@@ -951,3 +952,19 @@ def jaccard_dist(comm_id,celltype_annotations,save=None):
     if save:
         plt.savefig(f'./figures/{save}.pdf')
     plt.show()
+
+def get_new_lr_sup(ligand_sup, receptor_sup, spatial_dist_mtx):
+    new_ligand_sup = np.matmul(ligand_sup.reshape((-1, 1)) * spatial_dist_mtx, receptor_sup.reshape((-1, 1)))
+    new_receptor_sup = np.matmul(receptor_sup.reshape((-1, 1)) * spatial_dist_mtx, ligand_sup.reshape((-1, 1)))
+    return [new_ligand_sup, new_receptor_sup]
+
+def obtain_spatial_pca(pca_embedding,spatial_pos,w=0.5):
+#w: weight of spatial importance
+    row_norms = np.linalg.norm(pca_embedding, axis=1)
+    scaled_pca = pca_embedding / np.mean(row_norms)
+    shifted_pos = spatial_pos - np.mean(spatial_pos, axis=0)
+    shifted_pos_row_norms = np.linalg.norm(shifted_pos, axis=1)
+    scaled_pos = shifted_pos / np.mean(shifted_pos_row_norms)
+    spatial_pca = np.concatenate((scaled_pca, w * scaled_pos), axis=1)
+
+    return spatial_pca

@@ -7,7 +7,7 @@ from mpl_toolkits.mplot3d.proj3d import proj_transform
 from wordcloud import WordCloud
 
 from .Data_preparation import get_pathway_genes,get_gene_ind_in_gene_ls,find_lr_intersected_clusters,get_rel_i_j_ls,\
-    get_CCI_mtx, get_cluster_size_ls, get_general_tree_colors
+    get_CCC_mtx, get_cluster_size_ls, get_general_tree_colors
 
 class Arrow3D(FancyArrowPatch):
 
@@ -104,9 +104,9 @@ def get_node_3D_pos(lr, node_pos):
 
     return node_3D_pos
 
-def draw_CCI(L_onehot_ls, R_onehot_ls, CCI_mtx, L_node_mapping_dict=None, R_node_mapping_dict=None, L_is_general=True, R_is_general=True,CCI_linewidth=10,CCI_nodesize=5,save=None,angle=-25,height_angle=10):
+def draw_CCC(L_onehot_ls, R_onehot_ls, CCC_mtx, L_node_mapping_dict=None, R_node_mapping_dict=None, L_is_general=True, R_is_general=True,CCC_linewidth=10,CCC_nodesize=5,save=None,angle=-25,height_angle=10):
     """
-    draw_CCI draws CCI of 4 cases: 1) allgenes to allgenes 2)L-general to R-general 3)L-MMT to R-general 4)L-general to R-MMT
+    draw_CCC draws CCC of 4 cases: 1) allgenes to allgenes 2)L-general to R-general 3)L-MMT to R-general 4)L-general to R-MMT
 
     :param all_LR: LR interactions from CellChatDB
     :param complex_input: complex_input file from CellChatDB
@@ -150,13 +150,13 @@ def draw_CCI(L_onehot_ls, R_onehot_ls, CCI_mtx, L_node_mapping_dict=None, R_node
     if L_is_general and R_is_general:
         for i in range(len(L_node_3D_pos) - 1):
             x, y, z = L_node_3D_pos[i]
-            ax.scatter(x, y, z, s=CCI_nodesize*1000 * L_size_ls[i]**(1/3), c=L_color_ls[i])
+            ax.scatter(x, y, z, s=CCC_nodesize*1000 * L_size_ls[i]**(1/3), c=L_color_ls[i])
 
         for i in range(len(R_node_3D_pos) - 1):
             x, y, z = R_node_3D_pos[i]
-            ax.scatter(x, y, z, s=CCI_nodesize*1000 * R_size_ls[i]**(1/3), c=R_color_ls[i])
+            ax.scatter(x, y, z, s=CCC_nodesize*1000 * R_size_ls[i]**(1/3), c=R_color_ls[i])
 
-        # filter CCI between duplicate nodes
+        # filter CCC between duplicate nodes
         L_filter = np.asarray([len(L_tree.out_edges(i)) != 1 for i in range(len(L_color_ls))]) # filter out nodes that has only one child identical to it
         R_filter = np.asarray([len(R_tree.out_edges(i)) != 1 for i in range(len(R_color_ls))]) # filter out nodes that has only one child identical to it
 
@@ -166,14 +166,14 @@ def draw_CCI(L_onehot_ls, R_onehot_ls, CCI_mtx, L_node_mapping_dict=None, R_node
                 if L_filter[i] and R_filter[j]:
                     LR_filter[i][j] = 1
 
-        CCI_mtx = np.multiply(LR_filter, CCI_mtx) # filter CCI mtx
+        CCC_mtx = np.multiply(LR_filter, CCC_mtx) # filter CCC mtx
 
         for i in range(len(L_node_3D_pos) - 1):
             lx, ly, lz = L_node_3D_pos[i]
             for j in range(len(R_node_3D_pos) - 1):
                 rx, ry, rz = R_node_3D_pos[j]
-                if CCI_mtx[i][j] > 0:
-                    ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, linewidth=CCI_linewidth*CCI_mtx[i, j], arrowstyle='-', fc=L_color_ls[i], ec=L_color_ls[i])
+                if CCC_mtx[i][j] > 0:
+                    ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, linewidth=CCC_linewidth*CCC_mtx[i, j], arrowstyle='-', fc=L_color_ls[i], ec=L_color_ls[i])
                     ax.arrow3D((lx+rx)/2, (ly+ry)/2, (lz+rz)/2, (rx - lx)/100, (ry - ly)/100, (rz - lz)/100, linewidth=2, mutation_scale=5,
                                fc=L_color_ls[i], ec=L_color_ls[i], arrowstyle=
                                ArrowStyle.CurveB(head_length=2, head_width=1))
@@ -182,19 +182,19 @@ def draw_CCI(L_onehot_ls, R_onehot_ls, CCI_mtx, L_node_mapping_dict=None, R_node
         assert L_node_mapping_dict is not None
         for node in L_node_3D_pos.keys():
             x, y, z = L_node_3D_pos[node]
-            ax.scatter(x, y, z, s=CCI_nodesize*1000*L_size_ls[L_node_mapping_dict[node]]**(1/3), c=L_color_ls[L_node_mapping_dict[node]])
+            ax.scatter(x, y, z, s=CCC_nodesize*1000*L_size_ls[L_node_mapping_dict[node]]**(1/3), c=L_color_ls[L_node_mapping_dict[node]])
 
         for i in range(len(R_node_3D_pos) - 1):
             x, y, z = R_node_3D_pos[i]
-            ax.scatter(x, y, z, s=CCI_nodesize*1000*R_size_ls[i]**(1/3), c=R_color_ls[R_node_mapping_dict[node]])
+            ax.scatter(x, y, z, s=CCC_nodesize*1000*R_size_ls[i]**(1/3), c=R_color_ls[R_node_mapping_dict[node]])
 
         for node in L_node_3D_pos.keys():
             lx, ly, lz = L_node_3D_pos[node]
             i = L_node_mapping_dict[node]
             for j in range(len(R_node_3D_pos) - 1):
                 rx, ry, rz = R_node_3D_pos[j]
-                if CCI_mtx[i][j] > 0:
-                    ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, linewidth=CCI_linewidth*CCI_mtx[i, j], arrowstyle='-', fc=L_color_ls[i], ec=L_color_ls[i])
+                if CCC_mtx[i][j] > 0:
+                    ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, linewidth=CCC_linewidth*CCC_mtx[i, j], arrowstyle='-', fc=L_color_ls[i], ec=L_color_ls[i])
                     ax.arrow3D((lx+rx)/2, (ly+ry)/2, (lz+rz)/2, (rx - lx)/100, (ry - ly)/100, (rz - lz)/100, linewidth=2, mutation_scale=5,
                                fc=L_color_ls[i], ec=L_color_ls[i], arrowstyle=
                                ArrowStyle.CurveB(head_length=2, head_width=1))
@@ -203,19 +203,19 @@ def draw_CCI(L_onehot_ls, R_onehot_ls, CCI_mtx, L_node_mapping_dict=None, R_node
         assert R_node_mapping_dict is not None
         for node in R_node_3D_pos.keys():
             x, y, z = R_node_3D_pos[node]
-            ax.scatter(x, y, z, s=CCI_nodesize*1000*R_size_ls[R_node_mapping_dict[node]]**(1/3),c=R_color_ls[R_node_mapping_dict[node]])
+            ax.scatter(x, y, z, s=CCC_nodesize*1000*R_size_ls[R_node_mapping_dict[node]]**(1/3),c=R_color_ls[R_node_mapping_dict[node]])
 
         for i in range(len(L_node_3D_pos) - 1):
             x, y, z = L_node_3D_pos[i]
-            ax.scatter(x, y, z, s=CCI_nodesize*1000*L_size_ls[i]**(1/3),c=L_color_ls[i])
+            ax.scatter(x, y, z, s=CCC_nodesize*1000*L_size_ls[i]**(1/3),c=L_color_ls[i])
 
         for node in R_node_3D_pos.keys():
             rx, ry, rz = R_node_3D_pos[node]
             i = R_node_mapping_dict[node]
             for j in range(len(L_node_3D_pos) - 1):
                 lx, ly, lz = L_node_3D_pos[j]
-                if CCI_mtx[j][i] > 0:
-                    ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, linewidth=CCI_linewidth*CCI_mtx[j, i], arrowstyle='-', fc=L_color_ls[j], ec=L_color_ls[j])
+                if CCC_mtx[j][i] > 0:
+                    ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, linewidth=CCC_linewidth*CCC_mtx[j, i], arrowstyle='-', fc=L_color_ls[j], ec=L_color_ls[j])
                     ax.arrow3D((lx+rx)/2, (ly+ry)/2, (lz+rz)/2, (rx - lx)/100, (ry - ly)/100, (rz - lz)/100, linewidth=2, mutation_scale=5,
                                fc=L_color_ls[j], ec=L_color_ls[j], arrowstyle=ArrowStyle.CurveB(head_length=2, head_width=1))
 
@@ -248,10 +248,10 @@ def draw_CCI(L_onehot_ls, R_onehot_ls, CCI_mtx, L_node_mapping_dict=None, R_node
         plt.savefig(f'./figures/{save}', dpi=425, bbox_inches='tight', transparent=True)
     plt.show()
 
-def draw_intersected_CCI(pathway,all_LR,L_ls,R_ls,L_onehot_ls,R_onehot_ls,L_sup_mtx,R_sup_mtx,
-                     ligand_exp_dict,receptor_exp_dict,cofactor_exp_dict,CCI_threshold=0.5,CCI_linewidth=10,CCI_nodesize=5,save=None):
+def draw_intersected_CCC(pathway,all_LR,L_ls,R_ls,L_onehot_ls,R_onehot_ls,L_sup_mtx,R_sup_mtx,
+                     ligand_exp_dict,receptor_exp_dict,cofactor_exp_dict,CCC_threshold=0.5,CCC_linewidth=10,CCC_nodesize=5,save=None):
     """
-    draw_CCI draws CCI of 4 cases: 1) allgenes to allgenes 2)L-general to R-general 3)L-MMT to R-general 4)L-general to R-MMT
+    draw_CCC draws CCC of 4 cases: 1) allgenes to allgenes 2)L-general to R-general 3)L-MMT to R-general 4)L-general to R-MMT
 
     :param all_LR: LR interactions from CellChatDB
     :param complex_input: complex_input file from CellChatDB
@@ -318,21 +318,21 @@ def draw_intersected_CCI(pathway,all_LR,L_ls,R_ls,L_onehot_ls,R_onehot_ls,L_sup_
 
     for i in range(len(L_node_3D_pos) - 1):
         x, y, z = L_node_3D_pos[i]
-        ax.scatter(x, y, z, s= CCI_nodesize*1000*L_size_ls[i]**(1/2), c=L_intersected_color_ls[i], marker=L_intersected_shape_ls[i])
+        ax.scatter(x, y, z, s= CCC_nodesize*1000*L_size_ls[i]**(1/2), c=L_intersected_color_ls[i], marker=L_intersected_shape_ls[i])
 
     for i in range(len(R_node_3D_pos) - 1):
         x, y, z = R_node_3D_pos[i]
-        ax.scatter(x, y, z, s=CCI_nodesize*1000*R_size_ls[i]**(1/2), c=R_intersected_color_ls[i], marker=R_intersected_shape_ls[i])
+        ax.scatter(x, y, z, s=CCC_nodesize*1000*R_size_ls[i]**(1/2), c=R_intersected_color_ls[i], marker=R_intersected_shape_ls[i])
 
-    pathway_CCI_mtx = get_CCI_mtx(all_LR, pathway_ligands, pathway_receptors, L_intersected_onehot_ls,
+    pathway_CCC_mtx = get_CCC_mtx(all_LR, pathway_ligands, pathway_receptors, L_intersected_onehot_ls,
                                   R_intersected_onehot_ls, ligand_exp_dict, receptor_exp_dict, cofactor_exp_dict,
-                                  CCI_threshold)
+                                  CCC_threshold)
 
-    CCI_mtx = np.concatenate([np.concatenate(
-        [pathway_CCI_mtx[(l_level, r_level)] for l_level in range(len(L_intersected_onehot_ls))], axis=0) for r_level in
+    CCC_mtx = np.concatenate([np.concatenate(
+        [pathway_CCC_mtx[(l_level, r_level)] for l_level in range(len(L_intersected_onehot_ls))], axis=0) for r_level in
         range(len(R_intersected_onehot_ls))], axis=1)
 
-    # filter CCI between duplicate nodes
+    # filter CCC between duplicate nodes
     L_filter = np.asarray([len(L_tree.out_edges(i)) != 1 for i in range(len(L_intersected_color_ls))]) # filter out nodes that has only one child identical to it
     R_filter = np.asarray([len(R_tree.out_edges(i)) != 1 for i in range(len(R_intersected_color_ls))]) # filter out nodes that has only one child identical to it
 
@@ -342,14 +342,14 @@ def draw_intersected_CCI(pathway,all_LR,L_ls,R_ls,L_onehot_ls,R_onehot_ls,L_sup_
             if L_filter[i] and R_filter[j]:
                 LR_filter[i][j] = 1
 
-    CCI_mtx = np.multiply(LR_filter, CCI_mtx) # filter CCI mtx
+    CCC_mtx = np.multiply(LR_filter, CCC_mtx) # filter CCC mtx
 
     for i in range(len(L_node_3D_pos) - 1):
         lx, ly, lz = L_node_3D_pos[i]
         for j in range(len(R_node_3D_pos) - 1):
             rx, ry, rz = R_node_3D_pos[j]
-            if CCI_mtx[i][j] > 0:
-                ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, linewidth=CCI_linewidth*CCI_mtx[i, j], arrowstyle='-', fc=L_intersected_color_ls[i], ec=L_intersected_color_ls[i])
+            if CCC_mtx[i][j] > 0:
+                ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, linewidth=CCC_linewidth*CCC_mtx[i, j], arrowstyle='-', fc=L_intersected_color_ls[i], ec=L_intersected_color_ls[i])
                 ax.arrow3D((lx+rx)/2, (ly+ry)/2, (lz+rz)/2, (rx - lx)/100, (ry - ly)/100, (rz - lz)/100, linewidth=2, mutation_scale=5,
                            fc=L_intersected_color_ls[i], ec=L_intersected_color_ls[i], arrowstyle=
                            ArrowStyle.CurveB(head_length=2, head_width=1))
@@ -410,7 +410,7 @@ def draw_MMT(lr_tree,lr_node_pos,lr_size_ls,lr_ls,lr_node_mapping_dict=None,node
         plt.savefig(save)
     plt.show()
 
-def draw_CCI_between_MMT(L_tree, L_node_pos, R_tree, R_node_pos, L_ls, L_size_ls, R_ls, R_size_ls, CCI_mtx, lr_pair_inds, L_node_mapping_dict=None, R_node_mapping_dict=None, CCI_linewidth = 10, CCI_nodesize=5,save=None):
+def draw_CCC_between_MMT(L_tree, L_node_pos, R_tree, R_node_pos, L_ls, L_size_ls, R_ls, R_size_ls, CCC_mtx, lr_pair_inds, L_node_mapping_dict=None, R_node_mapping_dict=None, CCC_linewidth = 10, CCC_nodesize=5,save=None):
     w = 16
     h = 16
     default_color_ls = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
@@ -438,12 +438,12 @@ def draw_CCI_between_MMT(L_tree, L_node_pos, R_tree, R_node_pos, L_ls, L_size_ls
 
     for node in L_node_3D_pos.keys():
         x, y, z = L_node_3D_pos[node]
-        ax.scatter(x, y, z, s=CCI_nodesize*1000*L_size_ls[L_node_mapping_dict[node]]**(1/3), c=default_color_ls[L_color_ls[L_node_mapping_dict[node]]])
+        ax.scatter(x, y, z, s=CCC_nodesize*1000*L_size_ls[L_node_mapping_dict[node]]**(1/3), c=default_color_ls[L_color_ls[L_node_mapping_dict[node]]])
         ax.text(x,y,z-0.3*L_size_ls[L_node_mapping_dict[node]],L_ls[node],fontsize=15)
 
     for node in R_node_3D_pos.keys():
         x, y, z = R_node_3D_pos[node]
-        ax.scatter(x, y, z, s=CCI_nodesize*1000*R_size_ls[R_node_mapping_dict[node]]**(1/3), c=default_color_ls[R_color_ls[R_node_mapping_dict[node]]])
+        ax.scatter(x, y, z, s=CCC_nodesize*1000*R_size_ls[R_node_mapping_dict[node]]**(1/3), c=default_color_ls[R_color_ls[R_node_mapping_dict[node]]])
         ax.text(x,y,z-0.3*R_size_ls[R_node_mapping_dict[node]],R_ls[node],fontsize=15)
 
     for node_i in L_node_3D_pos.keys():
@@ -452,8 +452,8 @@ def draw_CCI_between_MMT(L_tree, L_node_pos, R_tree, R_node_pos, L_ls, L_size_ls
         for node_j in R_node_3D_pos.keys():
             rx, ry, rz = R_node_3D_pos[node_j]
             j = R_node_mapping_dict[node_j]
-            if CCI_mtx[i][j] > 0 and (node_i, node_j) in lr_pair_inds:
-                ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, fc=default_color_ls[L_color_ls[i]], ec=default_color_ls[L_color_ls[i]], linewidth=CCI_linewidth*CCI_mtx[i, j], arrowstyle='fancy')
+            if CCC_mtx[i][j] > 0 and (node_i, node_j) in lr_pair_inds:
+                ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, fc=default_color_ls[L_color_ls[i]], ec=default_color_ls[L_color_ls[i]], linewidth=CCC_linewidth*CCC_mtx[i, j], arrowstyle='fancy')
                 ax.arrow3D((lx+rx)/2, (ly+ry)/2, (lz+rz)/2, (rx - lx)/100, (ry - ly)/100, (rz - lz)/100, linewidth=2, mutation_scale=5,
                            fc=default_color_ls[L_color_ls[i]], ec=default_color_ls[L_color_ls[i]], arrowstyle=
                            ArrowStyle.CurveB(head_length=2, head_width=1))
@@ -489,7 +489,7 @@ def draw_CCI_between_MMT(L_tree, L_node_pos, R_tree, R_node_pos, L_ls, L_size_ls
         plt.savefig(save, dpi=425, bbox_inches='tight', transparent=True)
     plt.show()
 
-def draw_CCI_between_LR_union_MMT(LR_union_tree, LR_union_node_pos, all_LR_filtered, L_size_ls, R_size_ls, L_color_ls, R_color_ls, CCI_vector, LR_union_node_mapping_dict=None, CCI_linewidth=10,CCI_nodesize=5,save=None):
+def draw_CCC_between_LR_union_MMT(LR_union_tree, LR_union_node_pos, all_LR_filtered, L_size_ls, R_size_ls, L_color_ls, R_color_ls, CCC_vector, LR_union_node_mapping_dict=None, CCC_linewidth=10,CCC_nodesize=5,save=None):
 
     w = 16
     h = 16
@@ -506,12 +506,12 @@ def draw_CCI_between_LR_union_MMT(LR_union_tree, LR_union_node_pos, all_LR_filte
 
     for node in L_node_3D_pos.keys():
         x, y, z = L_node_3D_pos[node]
-        ax.scatter(x, y, z, s=CCI_nodesize*1000*L_size_ls[LR_union_node_mapping_dict[node]]**(1/3), c=default_color_ls[L_color_ls[LR_union_node_mapping_dict[node]]])
+        ax.scatter(x, y, z, s=CCC_nodesize*1000*L_size_ls[LR_union_node_mapping_dict[node]]**(1/3), c=default_color_ls[L_color_ls[LR_union_node_mapping_dict[node]]])
         ax.text(x, y, z - 0.3 * L_size_ls[LR_union_node_mapping_dict[node]], all_LR_filtered.iloc[node]['Ligand'], fontsize=15, zorder=0)
 
     for node in R_node_3D_pos.keys():
         x, y, z = R_node_3D_pos[node]
-        ax.scatter(x, y, z, s=CCI_nodesize*1000*R_size_ls[LR_union_node_mapping_dict[node]]**(1/3), c=default_color_ls[R_color_ls[LR_union_node_mapping_dict[node]]])
+        ax.scatter(x, y, z, s=CCC_nodesize*1000*R_size_ls[LR_union_node_mapping_dict[node]]**(1/3), c=default_color_ls[R_color_ls[LR_union_node_mapping_dict[node]]])
         ax.text(x, y, z - 0.3 * R_size_ls[LR_union_node_mapping_dict[node]], all_LR_filtered.iloc[node]['Receptor'], fontsize=15, zorder=0)
 
     for node_i in L_node_3D_pos.keys():
@@ -520,8 +520,8 @@ def draw_CCI_between_LR_union_MMT(LR_union_tree, LR_union_node_pos, all_LR_filte
         i = LR_union_node_mapping_dict[node_i]
 
         # Draw interactions between 2 trees
-        if CCI_vector[i] > 0:
-            ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, linewidth=CCI_linewidth*CCI_vector[i],
+        if CCC_vector[i] > 0:
+            ax.arrow3D(lx, ly, lz, rx - lx, ry - ly, rz - lz, linewidth=CCC_linewidth*CCC_vector[i],
                        fc=default_color_ls[L_color_ls[i]], ec=default_color_ls[L_color_ls[i]], arrowstyle='-')
             ax.arrow3D((lx+rx)/2, (ly+ry)/2, (lz+rz)/2, (rx - lx)/100, (ry - ly)/100, (rz - lz)/100, linewidth=2,mutation_scale=5,
                        fc=default_color_ls[L_color_ls[i]], ec=default_color_ls[L_color_ls[i]], arrowstyle=
@@ -558,28 +558,6 @@ def draw_CCI_between_LR_union_MMT(LR_union_tree, LR_union_node_pos, all_LR_filte
     if save is not None:
         plt.savefig(f'{save}', dpi=425, bbox_inches='tight', transparent=True)
     plt.show()
-
-def visualize_wordcloud(lr_freq_dict,save=None):
-    """
-    visualize_wordcloud visualizes the frequency of ligands/receptors in all multiscale ligand/receptor trees
-
-    :lr_freq_dict: frequence dictionary of ligands/receptors
-    :save: directory to save the figure
-    """
-
-    wordcloud = WordCloud(width=800, height=800,
-                          background_color='white',
-                          max_words=100,
-                          relative_scaling=1,
-                          normalize_plurals=False).generate_from_frequencies(lr_freq_dict)
-    plt.figure(figsize=(8, 8), facecolor=None)
-    plt.imshow(wordcloud)
-    plt.axis("off")
-    plt.tight_layout(pad=0)
-    if save is not None:
-        plt.savefig(save)
-    plt.show()
-
 
 def is_leaf(node, edges):
     leafy_edges = set()
