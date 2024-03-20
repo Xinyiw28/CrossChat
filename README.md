@@ -20,7 +20,7 @@ It is composed of 2 methods, CrossChatH and CrossChatT, which detect global and 
 
 We provide several visualizations of CCC between hierarchical cell groups. Several downstream analysis based on the inferred hierarchical CCC patterns are also provided. 
 
-![illustration](docs/CrossChat_GitHub.pdf)
+![illustration](docs/CrossChat_GitHub.png)
 
 ## Contributors
 
