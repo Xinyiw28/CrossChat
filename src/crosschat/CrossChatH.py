@@ -6,12 +6,12 @@ from sklearn.decomposition import PCA
 from matplotlib import pyplot as plt
 from .Data_preparation import prepare_lr_sup_mtx,prepare_gene_exp_dict,load_files,filter_all_LR,multiscale_clustering,\
 compute_genes_geo_avg_vector,get_wilcox_score,get_onehot_ls,get_CCC_mtx,get_lr_exp_in_clusters,cluster_exp_ls, \
-select_partitions,draw_multiscale_umap,get_pathway_genes,get_Markov_time_ls,obtain_spatial_pca
+select_partitions,draw_multiscale_umap,get_pathway_genes,get_Markov_time_ls,obtain_spatial_pca,jaccard_dist, get_cluster_results
 from .Visualization import draw_CCC
 
 class CrossChatH(object):
 
-    def __init__(self, adata, species="human"):
+    def __init__(self, adata, species="human", user_comm_ids=None):
         self.adata = adata
         self.mtx = adata.X
         self.ncells = self.mtx.shape[0]
@@ -20,6 +20,10 @@ class CrossChatH(object):
         self.R_allresults = None
         self.species = species
         self.all_LR, self.cofactor_input, self.complex_input = load_files(species=self.species)
+        if user_comm_ids is not None:
+            self.L_allresults = get_cluster_results(user_comm_ids)
+            self.R_allresults = get_cluster_results(user_comm_ids)
+
 
     def prepare_adata(self, normalize=False, scale=False, input='allgenes'):
         if normalize == True:
@@ -41,35 +45,34 @@ class CrossChatH(object):
         _, _, self.L_ls, _ = prepare_lr_sup_mtx(self.all_LR_filtered, self.complex_input, 'L', self.mtx.T, self.genenames)
         _, _, self.R_ls,_ = prepare_lr_sup_mtx(self.all_LR_filtered, self.complex_input, 'R', self.mtx.T, self.genenames)
 
-    def Multsicale_clustering(self,cluster_by="allgenes"):
-        """
-        multiscale_clustering runs multiscale clustering on cells based on either allgenes, or ligands, or receptors
-        :param cluster_by: "allgenes", "lr"
-        """
-
-        if cluster_by == "allgenes":
-            pca_embedding = self.adata.obsm['X_pca']
-            self.L_allresults = multiscale_clustering(pca_embedding, min_scale=-1, max_scale=4, n_scale=100, n_tries=20)
-            self.R_allresults = self.L_allresults
-        elif cluster_by == "lr":
-            L_mtx = np.concatenate([self.ligand_exp_dict[self.L_ls[i]] for i in range(len(self.L_ls))], axis=0).T
-            pca = PCA(n_components=50)
-            L_pca = pca.fit_transform(L_mtx)
-            self.L_allresults = multiscale_clustering(L_pca, min_scale=-1, max_scale=4, n_scale=100, n_tries=20)
-            R_mtx = np.concatenate([self.receptor_exp_dict[self.R_ls[i]] for i in range(len(self.R_ls))], axis=0).T
-            pca = PCA(n_components=50)
-            R_pca = pca.fit_transform(R_mtx)
-            self.R_allresults = multiscale_clustering(R_pca, min_scale=-1, max_scale=4, n_scale=100, n_tries=20)
-
-    def Multsicale_clustering_spatial(self,cluster_by="allgenes"):
+    def Multsicale_clustering(self,cluster_by="allgenes",k=15):
         """
         multiscale_clustering runs multiscale clustering on cells based on either allgenes, or ligands, or receptors
         :param cluster_by: "allgenes", "lr"
         """
         if cluster_by == "allgenes":
             pca_embedding = self.adata.obsm['X_pca']
-            spatial_pca = obtain_spatial_pca(pca_embedding, self.adata.obsm['spatial'], w=0.5)
-            self.L_allresults = multiscale_clustering(spatial_pca, min_scale=-1, max_scale=4, n_scale=100, n_tries=20)
+            self.L_allresults = multiscale_clustering(pca_embedding, min_scale=-1, max_scale=4, n_scale=100, n_tries=20, k=k)
+            self.R_allresults = self.L_allresults
+        elif cluster_by == "lr":
+            L_mtx = np.concatenate([self.ligand_exp_dict[self.L_ls[i]] for i in range(len(self.L_ls))], axis=0).T
+            pca = PCA(n_components=50)
+            L_pca = pca.fit_transform(L_mtx)
+            self.L_allresults = multiscale_clustering(L_pca, min_scale=-1, max_scale=4, n_scale=100, n_tries=20, k=k)
+            R_mtx = np.concatenate([self.receptor_exp_dict[self.R_ls[i]] for i in range(len(self.R_ls))], axis=0).T
+            pca = PCA(n_components=50)
+            R_pca = pca.fit_transform(R_mtx)
+            self.R_allresults = multiscale_clustering(R_pca, min_scale=-1, max_scale=4, n_scale=100, n_tries=20, k=k)
+
+    def Multsicale_clustering_spatial(self,cluster_by="allgenes",k=15,w=0.5):
+        """
+        multiscale_clustering runs multiscale clustering on cells based on either allgenes, or ligands, or receptors
+        :param cluster_by: "allgenes", "lr"
+        """
+        if cluster_by == "allgenes":
+            pca_embedding = self.adata.obsm['X_pca']
+            spatial_pca = obtain_spatial_pca(pca_embedding, self.adata.obsm['spatial'], w=w)
+            self.L_allresults = multiscale_clustering(spatial_pca, min_scale=-1, max_scale=4, n_scale=100, n_tries=20,k=k)
             self.R_allresults = self.L_allresults
         elif cluster_by == "lr":
             L_mtx = np.concatenate([self.ligand_exp_dict[self.L_ls[i]] for i in range(len(self.L_ls))], axis=0).T
@@ -78,10 +81,10 @@ class CrossChatH(object):
             R_mtx = np.concatenate([self.receptor_exp_dict[self.R_ls[i]] for i in range(len(self.R_ls))], axis=0).T
             pca = PCA(n_components=50)
             R_pca = pca.fit_transform(R_mtx)
-            L_spatial_pca = obtain_spatial_pca(L_pca, self.adata.obsm['spatial'], w=0.5)
-            R_spatial_pca = obtain_spatial_pca(R_pca, self.adata.obsm['spatial'], w=0.5)
-            self.L_allresults = multiscale_clustering(L_spatial_pca, min_scale=-1, max_scale=4, n_scale=100, n_tries=20)
-            self.R_allresults = multiscale_clustering(R_spatial_pca, min_scale=-1, max_scale=4, n_scale=100, n_tries=20)
+            L_spatial_pca = obtain_spatial_pca(L_pca, self.adata.obsm['spatial'], w=w)
+            R_spatial_pca = obtain_spatial_pca(R_pca, self.adata.obsm['spatial'], w=w)
+            self.L_allresults = multiscale_clustering(L_spatial_pca, min_scale=-1, max_scale=4, n_scale=100, n_tries=20,k=k)
+            self.R_allresults = multiscale_clustering(R_spatial_pca, min_scale=-1, max_scale=4, n_scale=100, n_tries=20,k=k)
 
     def select_partitions(self, max_nvi=0.1, window_size=15, basin_radius=15, lr = "L"):
         if lr == "L":
@@ -100,20 +103,16 @@ class CrossChatH(object):
             self.R_allresults['comm_levels'] = comm_levels
             self.R_allresults['onehot_ls'] = get_onehot_ls(self.R_allresults['selected_comm_ids'])
 
-    def Draw_multiscale_umap(self,cluster_input="allgenes",spatial=False):
-        # cluster_input:"allgenes"/"L"/"R"
+    def Draw_multiscale_umap(self,cluster_input="allgenes",spatial=False,save=None):
+        # cluster_input:"allgenes"/"L"/"R"/"userinput"
+        if cluster_input == "userinput":
+            draw_multiscale_umap(cluster_input='allgenes', adata=self.adata, all_results=self.L_allresults, save=save, spatial=spatial)
         if cluster_input == "allgenes":
-            draw_multiscale_umap(cluster_input='allgenes', adata=self.adata, all_results=self.allresults,
-                                    comm_levels=self.allresults['comm_levels'], selected_partitions=self.allresults['selected_partitions'],
-                                    selected_comm_ids=self.allresults['selected_comm_ids'], save=False, spatial=spatial)
+            draw_multiscale_umap(cluster_input='allgenes', adata=self.adata, all_results=self.L_allresults, save=save, spatial=spatial)
         elif cluster_input == "L":
-            draw_multiscale_umap(cluster_input='L', adata=self.adata, all_results=self.L_allresults,
-                                    comm_levels=self.L_allresults['comm_levels'], selected_partitions=self.L_allresults['selected_partitions'],
-                                    selected_comm_ids=self.L_allresults['selected_comm_ids'], save=False, spatial=spatial)
+            draw_multiscale_umap(cluster_input='L', adata=self.adata, all_results=self.L_allresults, save=save, spatial=spatial)
         elif cluster_input == "R":
-            draw_multiscale_umap(cluster_input='R', adata=self.adata, all_results=self.R_allresults,
-                                    comm_levels=self.R_allresults['comm_levels'], selected_partitions=self.R_allresults['selected_partitions'],
-                                    selected_comm_ids=self.R_allresults['selected_comm_ids'], save=False, spatial=spatial)
+            draw_multiscale_umap(cluster_input='R', adata=self.adata, all_results=self.R_allresults, save=save, spatial=spatial)
 
     def Draw_annotations_umap(self):
         sc.pl.umap(self.adata, color="annotations", save=False)
@@ -260,4 +259,6 @@ class CrossChatH(object):
 
         # plt.savefig('/Users/xinyiwang/Desktop/pathway_clustering.pdf')
 
+    def jaccard_dist(self,comm_ids,celltype_annotations,save=False):
+        return jaccard_dist(comm_ids, celltype_annotations, save=save)
 

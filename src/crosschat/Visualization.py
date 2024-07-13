@@ -151,10 +151,12 @@ def draw_CCC(L_onehot_ls, R_onehot_ls, CCC_mtx, L_node_mapping_dict=None, R_node
         for i in range(len(L_node_3D_pos) - 1):
             x, y, z = L_node_3D_pos[i]
             ax.scatter(x, y, z, s=CCC_nodesize*1000 * L_size_ls[i]**(1/3), c=L_color_ls[i])
+            ax.text(x,y,z-0.1, f'{i}',c='black')
 
         for i in range(len(R_node_3D_pos) - 1):
             x, y, z = R_node_3D_pos[i]
             ax.scatter(x, y, z, s=CCC_nodesize*1000 * R_size_ls[i]**(1/3), c=R_color_ls[i])
+            ax.text(x, y, z - 0.1, f'{i}', c='black')
 
         # filter CCC between duplicate nodes
         L_filter = np.asarray([len(L_tree.out_edges(i)) != 1 for i in range(len(L_color_ls))]) # filter out nodes that has only one child identical to it

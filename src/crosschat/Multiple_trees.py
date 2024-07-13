@@ -76,7 +76,7 @@ def find_multiscale_trees(lr_sup_mtx, remove_cells_prop=0.95, support_size_thres
     adj_mtx = adj_mtx >= inclusive_threshold
 
     #define the big graph
-    Graph = nx.from_numpy_matrix(adj_mtx)
+    Graph = nx.from_numpy_array(adj_mtx)
 
     assert len(Graph.edges()) < 16000, f"{len(Graph.edges())} edges are too many to finish on time"
 

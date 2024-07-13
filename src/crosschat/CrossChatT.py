@@ -4,6 +4,8 @@ import umap
 import scanpy as sc
 from sklearn.decomposition import PCA
 import networkx as nx
+import numpy as np
+from scipy.sparse import lil_matrix
 from scipy.spatial import distance_matrix
 from matplotlib import pyplot as plt
 from .Data_preparation import prepare_lr_sup_mtx,prepare_gene_exp_dict,load_files,filter_all_LR,multiscale_clustering,\
@@ -43,6 +45,23 @@ class CrossChatT(object):
 
     def Draw_annotations_umap(self):
         sc.pl.umap(self.adata, color="annotations", save=False)
+
+    def Binarization(self,threshold=0):
+        #Input to Binarization is normalized but not scaled gene expression matrix
+        #Threshold each gene on all cells, throw out the cells with lowest gene expression according to threshold
+        ncells = self.adata.X.shape[0]
+        matrix = self.adata.X
+        for i in range(matrix.shape[0]):
+            row = matrix.getrow(i).toarray()[0]
+            positive_indices = row > 0
+            n_remove = int(positive_indices.sum()*threshold)  #number of elements to change to 0
+            if np.count_nonzero(positive_indices) > n_remove:
+                positive_values = row[positive_indices]
+                smallest_n_indices = np.argsort(positive_values)[:n_remove]
+                actual_indices = np.nonzero(positive_indices)[0][smallest_n_indices]
+                matrix[i, actual_indices] = 0
+        matrix = matrix.tocsr()
+        self.adata.X = matrix
 
     def Detect_trees(self,type="l",remove_cells_prop=0.9,support_size_threshold=30, inclusive_threshold=0.9,
                      disjoint_threshold=0.95,tree_size=4,tree_scales=3):
@@ -138,14 +157,14 @@ class CrossChatT(object):
                                           inclusive_threshold=inclusive_threshold,
                                           disjoint_threshold=disjoint_threshold, tree_size=tree_size,
                                           tree_scales=tree_scales)
-            self.ligand_trees = trees
+            self.ligand_trees = sorted(trees, key=lambda x: x.number_of_nodes(), reverse=True)
         elif type == "r":
             trees = find_multiscale_trees(self.spatial_R_sup_mtx, remove_cells_prop=remove_cells_prop,
                                           support_size_threshold=support_size_threshold,
                                           inclusive_threshold=inclusive_threshold,
                                           disjoint_threshold=disjoint_threshold, tree_size=tree_size,
                                           tree_scales=tree_scales)
-            self.receptor_trees = trees
+            self.receptor_trees = sorted(trees, key=lambda x: x.number_of_nodes(), reverse=True)
         elif type == "lr_union":
             self.spatial_LR_sup_mtx = prepare_lr_union_sup_mtx(self.all_LR_filtered, self.spatial_L_sup_mtx, self.spatial_R_sup_mtx, self.L_ls, self.R_ls)
             trees = find_multiscale_trees(self.spatial_LR_sup_mtx, remove_cells_prop=remove_cells_prop,
@@ -153,7 +172,7 @@ class CrossChatT(object):
                                           inclusive_threshold=inclusive_threshold,
                                           disjoint_threshold=disjoint_threshold, tree_size=tree_size,
                                           tree_scales=tree_scales)
-            self.lr_trees = trees
+            self.lr_trees = sorted(trees, key=lambda x: x.number_of_nodes(), reverse=True)
 
     def Draw_MMT(self,type="l",tree_inds=None,nodesize=20):
         # type is l,r

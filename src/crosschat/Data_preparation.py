@@ -123,13 +123,13 @@ def obtain_spatial_pca(pca_embedding,spatial_pos,w=0.5):
 
     return spatial_pca
 
-def multiscale_clustering(pca_embedding, min_scale=-1, max_scale=4, n_scale=100, n_tries=20):
+def multiscale_clustering(pca_embedding, min_scale=-1, max_scale=4, n_scale=100, n_tries=20, k=15):
 
     knn_indices, knn_dists, rp_trees = nearest_neighbors(pca_embedding, n_neighbors=15, metric="cosine",
                                                          metric_kwds=None, angular=False, random_state=None)
     ncells = pca_embedding.shape[0]
     knn_dists = knn_dists.astype(np.float32)
-    sigmas, rhos = smooth_knn_dist(knn_dists, k=15, n_iter=64, local_connectivity=1.0, bandwidth=1.0)
+    sigmas, rhos = smooth_knn_dist(knn_dists, k=k, n_iter=64, local_connectivity=1.0, bandwidth=1.0)
     rows, cols, vals, dists = compute_membership_strengths(knn_indices, knn_dists, sigmas, rhos, return_dists=False)
     A = scipy.sparse.coo_matrix((vals, (rows, cols)), shape=(ncells, ncells))
     S = 0.0000001 * scipy.sparse.eye(ncells)
@@ -213,6 +213,14 @@ def load_allresults(dir):
 
     return all_results
 
+def get_cluster_results(comm_ids):
+    allresults = {}
+    allresults['selected_comm_ids'] = comm_ids
+    allresults['comm_levels'] = [int(max(comm_id))+1 for comm_id in comm_ids]
+    allresults['onehot_ls'] = get_onehot_ls(comm_ids)
+
+    return allresults
+
 def filter_all_LR(all_LR, ligand_exp_dict, receptor_exp_dict, ncells, threshold = 0.005):
 
     all_LR_filtered = pd.DataFrame()
@@ -242,7 +250,7 @@ def prepare_lr_sup_mtx(all_LR,complex_input,lr='L',ds_mtx=None,ds_geneNames=None
     :param complex_input: complex_input file from CellChatDB
     :param lr: 'L' or 'R'
     :param ds_mtx: gene expression matrix
-    :param ds_geneNames: dataframe of gene names
+    :param ds_geneNames: dataframe of gene names, with column name as 0
     :return: lr_sup_mtx is the support matrix of ligands/receptors,
         all_LR_lr_ind is dataframe of list of indices of ligands/receptors in all_LR,
         lr_ls is list of unique ligands/receptors, in which ligand/receptor complex uses its complex name
@@ -257,7 +265,6 @@ def prepare_lr_sup_mtx(all_LR,complex_input,lr='L',ds_mtx=None,ds_geneNames=None
         lr_long = 'Receptor'
 
     separate_lr = []
-
     lr_ls = all_LR[lr_long].drop_duplicates().values
     for gene in lr_ls:
         if gene in complex_input['name'].values:
@@ -315,50 +322,54 @@ def prepare_lr_union_sup_mtx(all_LR_filtered, L_sup_mtx, R_sup_mtx, L_ls,R_ls):
 
     return LR_sup_mtx
 
-def draw_multiscale_umap(cluster_input,adata,all_results,comm_levels,selected_partitions,selected_comm_ids,save=False,spatial=False):
+def draw_multiscale_umap(cluster_input,adata,all_results,save=None,spatial=False):
     """
     draw_multiscale_umap draws the umap of multiscale clustering results
-
     :param cluster_input: 'L','R','allgenes'
     :param adata:
     :param all_results:
     :param comm_levels:
     :param selected_partitions:
+    :param save: directory (example: /Users/abc/Desktop/directory_name)
     """
+    comm_levels = all_results['comm_levels']
     n_scales = len(comm_levels)
     for i in range(n_scales):
         j = int(comm_levels[i])  # number of clusters at the selected scale
-        globals()[f'communities_{j}_labels'] = all_results['community_id'][selected_partitions[i]]
+        globals()[f'communities_{j}_labels'] = all_results['selected_comm_ids'][i]
     ds_community = pd.DataFrame()  # Dataframe of community labels
     for i in range(n_scales):
         j = comm_levels[i]
         ds_community[f'community_{j}'] = globals()[f'communities_{j}_labels']
-    for i in range(n_scales):
-        j = comm_levels[i]
         adata.obs[f'{cluster_input}_community_{j}'] = pd.Series(globals()[f'communities_{j}_labels'], dtype="category").values
 
-    onehot_ls = get_onehot_ls(selected_comm_ids)
+    onehot_ls = get_onehot_ls(all_results['selected_comm_ids'])
     node_color_ls = get_general_tree_colors(onehot_ls)
 
     if spatial == False:
         for i,comm_level in enumerate(comm_levels):
             adata.uns[f'{cluster_input}_community_{comm_level}_colors'] = node_color_ls[i]
             if save == True:
-                sc.pl.umap(adata, color=f"{cluster_input}_community_{comm_level}")
+                sc.pl.umap(adata, color=f"{cluster_input}_community_{comm_level}", save=save)
+            elif save:
+                filename = save + f'_{cluster_input}_community_{comm_level}.pdf'
+                sc.pl.umap(adata, color=f"{cluster_input}_community_{comm_level}", save=filename)
             else:
                 sc.pl.umap(adata, color=f"{cluster_input}_community_{comm_level}")
     else:
         for i,comm_level in enumerate(comm_levels):
             adata.uns[f'{cluster_input}_community_{comm_level}_colors'] = node_color_ls[i]
-            if save == True:
-                sc.pl.embedding(adata, basis="spatial", color=f"{cluster_input}_community_{comm_level}")
+            if save ==True:
+                sc.pl.embedding(adata, basis="spatial", color=f"{cluster_input}_community_{comm_level}", save=save)
+            elif save:
+                filename = save + f'_{cluster_input}_community_{comm_level}.pdf'
+                sc.pl.embedding(adata, basis="spatial", color=f"{cluster_input}_community_{comm_level}", save=filename)
             else:
                 sc.pl.embedding(adata, basis="spatial", color=f"{cluster_input}_community_{comm_level}")
 
 def get_general_tree_colors(onehot_ls):
     comm_levels = [len(onehot_ls[i]) for i in range(len(onehot_ls))]
     rel_i_j = get_rel_i_j_ls(onehot_ls)
-
     default_color_ls = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f','#bcbd22', '#17becf',
                         '#8A181A','#F04E4B','#FDE3E0','#8ACC99','#97AFDB','#997E88','#F8A993','#2DBA9D']
 
@@ -895,7 +906,7 @@ def cluster_exp_ls(L_exp_in_clusters,R_exp_in_clusters,L_all_results,R_all_resul
     """
 
     L_allgenes_Markov_time_ls = get_Markov_time_ls(L_all_results,L_comm_levels)
-    R_allgenes_Markov_time_ls = get_Markov_time_ls(R_all_results, R_comm_levels)
+    R_allgenes_Markov_time_ls = get_Markov_time_ls(R_all_results,R_comm_levels)
     LR_exp_in_clusters = [np.concatenate((L, R), axis=0) for L, R in zip(L_exp_in_clusters, R_exp_in_clusters)]
     data = LR_exp_in_clusters
 
@@ -936,21 +947,29 @@ def cluster_exp_ls(L_exp_in_clusters,R_exp_in_clusters,L_all_results,R_all_resul
 
 import seaborn as sns
 import matplotlib.pyplot as plt
-def jaccard_dist(comm_id,celltype_annotations,save=None):
+# Draw jaccard similarity between multiscale cell clusters and cell type annotations
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import scipy
 
+def jaccard_dist(comm_ids,celltype_annotations,save=False):
     celltypes = np.unique(celltype_annotations)
-    nclusters = int(np.max(comm_id) + 1)
-    jaccard_dist_mtx = np.ones((nclusters, np.shape(celltypes)[0]))
-    for cluster in range(nclusters):
-        for j, celltype in enumerate(celltypes):
-            u = comm_id == cluster
-            v = (celltype_annotations == celltype)
-            jaccard_dist_mtx[cluster, j] = scipy.spatial.distance.jaccard(u, v)
+    jaccard_dist_mtx = []
+    for comm_id in comm_ids:
+        for cluster in range(int(np.max(comm_id) + 1)):
+            jaccard_dist_row = []
+            for j, celltype in enumerate(celltypes):
+                u = comm_id == cluster
+                v = (celltype_annotations == celltype)
+                jaccard_dist_row.append(scipy.spatial.distance.jaccard(u, v))
+            jaccard_dist_mtx.append(jaccard_dist_row)
+    jaccard_dist_mtx = np.asarray(jaccard_dist_mtx)
     ax = sns.heatmap(jaccard_dist_mtx, linewidth=0.5)
     ticks = np.arange(len(celltypes))+0.5
     plt.xticks(ticks=ticks, labels=celltypes)
     if save:
-        plt.savefig(f'./figures/{save}.pdf')
+        plt.savefig(f'./figures/jaccard_dist_celltype.pdf')
     plt.show()
 
 def get_new_lr_sup(ligand_sup, receptor_sup, spatial_dist_mtx):
