@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crosschat"
+version = "0.0.1"
+authors = [
+  { name="Xinyi Wang", email="xinyiw28@uci.edu" },
+]
+description = "This package aims to detect and analyze hierarchical structures within cell-cell communications (CCC)."
+dependencies = [
+    "numpy",
+    "networkx",
+    "matplotlib",
+    "pandas",
+    "scipy",
+    "scanpy",
+]
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+license = {file = "LICENSE"}
+
+[project.urls]
+Homepage = "https://github.com/Xinyiw28/CrossChat"
+Issues = "https://github.com/Xinyiw28/CrossChat/issues"
