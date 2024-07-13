@@ -21,5 +21,5 @@ setup(
     license='MIT',
     author='Xinyi',
     author_email='xinyiw28@uci.edu',
-    description='Your main project'
+    description='This package aims to detect and analyze hierarchical structures within cell-cell communications (CCC).'
 )
