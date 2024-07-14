@@ -10,4 +10,3 @@
    :hidden:
 
    tutorials
-   api/index
