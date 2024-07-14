@@ -1,0 +1,6 @@
+Tutorials
+=========
+
+.. toctree::
+   notebooks/CrossChatH_tutorial
+   notebooks/CrossChatT_tutorial
