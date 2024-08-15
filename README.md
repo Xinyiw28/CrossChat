@@ -13,6 +13,8 @@ python setup.py install
 ```
 The installation usually takes a few seconds. 
 
+The Read the Docs website can be found in the following link: https://crosschat.readthedocs.io/en/latest/README.html 
+
 ## About CrossChat
 CrossChat is designed to analyze CCC between multi-scale cell clusters, where the clustering is based on expression of signaling molecules.
 It is composed of 2 methods, CrossChatH and CrossChatT, which detect global and local hierarchical structures within CCC respectively. 
