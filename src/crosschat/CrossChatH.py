@@ -10,8 +10,24 @@ select_partitions,draw_multiscale_umap,get_pathway_genes,get_Markov_time_ls,obta
 from .Visualization import draw_CCC
 
 class CrossChatH(object):
+    """
+    A class for demonstrating documentation.
+
+    Attributes
+    ----------
+    attribute : str
+        An attribute of the class.
+    """
 
     def __init__(self, adata, species="human", user_comm_ids=None):
+        """
+        Initialize the MyClass object with an attribute.
+        
+        Parameters
+        ----------
+        attribute : str
+            The attribute to set for the object.
+        """
         self.adata = adata
         self.mtx = adata.X
         self.ncells = self.mtx.shape[0]
@@ -26,6 +42,19 @@ class CrossChatH(object):
 
 
     def prepare_adata(self, normalize=False, scale=False, input='allgenes'):
+        """
+        This method performs an operation and returns a result.
+        
+        Parameters
+        ----------
+        param1 : int
+            The input parameter for the operation.
+        
+        Returns
+        -------
+        str
+            The result of the operation.
+        """
         if normalize == True:
             sc.pp.normalize_total(self.adata, target_sum=1e4)
             sc.pp.log1p(self.adata)

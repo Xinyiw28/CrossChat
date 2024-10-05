@@ -132,7 +132,7 @@ def multiscale_clustering(pca_embedding, min_scale=-1, max_scale=4, n_scale=100,
     sigmas, rhos = smooth_knn_dist(knn_dists, k=k, n_iter=64, local_connectivity=1.0, bandwidth=1.0)
     rows, cols, vals, dists = compute_membership_strengths(knn_indices, knn_dists, sigmas, rhos, return_dists=False)
     A = scipy.sparse.coo_matrix((vals, (rows, cols)), shape=(ncells, ncells))
-    S = 0.0000001 * scipy.sparse.eye(ncells)
+    S = 0.0000001 * scipy.sparse.eye(ncells,k=-1)
     A = A + S
     B = A.transpose(axes=None, copy=False)
     A_sym = A.maximum(B)
@@ -191,12 +191,13 @@ def save_allresults(all_results,dir):
     os.makedirs(save_dir, exist_ok=True)
 
     for key in list(all_results.keys()):
-        if key == "run_params":
+        if key not in ["run_params", "onehot_ls"]:
             np.save(f"{save_dir}/{key}.npy".format(key=key), all_results[key])
-        else:
-            np.savetxt(f"{save_dir}/{key}.csv".format(key=key), all_results[key])
-
+        elif key == 'onehot_ls':
+            with open(f"{save_dir}/{key}.npz".format(key=key), 'wb') as f:
+                pickle.dump(all_results[key], f)
     return None
+
 
 def load_allresults(dir):
     keys = ['scales',
@@ -209,8 +210,7 @@ def load_allresults(dir):
             'selected_partitions']
     all_results = dict()
     for key in keys:
-        all_results[key] = np.loadtxt(f"{dir}/{key}.csv")
-
+        all_results[key] = np.load(f"{dir}/{key}.npy")
     return all_results
 
 def get_cluster_results(comm_ids):

@@ -1,5 +1,7 @@
-from crosschat.Data_preparation import *
-from crosschat.Multiple_trees import *
-from crosschat.Visualization import *
-from crosschat.CrossChatH import CrossChatH
-from crosschat.CrossChatT import CrossChatT
+from .Data_preparation import *
+from .Multiple_trees import *
+from .Visualization import *
+from .CrossChatH import CrossChatH
+from .CrossChatT import CrossChatT
+
+__all__ = ['CrossChatH', 'CrossChatT']
