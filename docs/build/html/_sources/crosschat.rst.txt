@@ -8,7 +8,7 @@ crosschat.CrossChatH module
 ---------------------------
 
 .. automodule:: crosschat.CrossChatH
-   :members:
+   :members: CrossChatH
    :undoc-members:
    :show-inheritance:
 
@@ -16,7 +16,7 @@ crosschat.CrossChatT module
 ---------------------------
 
 .. automodule:: crosschat.CrossChatT
-   :members:
+   :members: CrossChatT
    :undoc-members:
    :show-inheritance:
 
