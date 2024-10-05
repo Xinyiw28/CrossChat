@@ -12,5 +12,4 @@ Welcome to CrossChat's documentation!
 
    README
    tutorials/index
-   crosschat
    modules
