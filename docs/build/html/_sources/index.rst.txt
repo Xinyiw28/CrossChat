@@ -13,3 +13,6 @@ Welcome to CrossChat's documentation!
    README
    tutorials/index
    modules
+
+CrossChatH
+CrossChatT

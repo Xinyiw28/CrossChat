@@ -113,7 +113,7 @@ def prepare_adata(adata, normalize=False, scale=False, input='allgenes'):
     return adata
 
 def obtain_spatial_pca(pca_embedding,spatial_pos,w=0.5):
-#w: weight of spatial importance
+    #w: weight of spatial importance
     row_norms = np.linalg.norm(pca_embedding, axis=1)
     scaled_pca = pca_embedding / np.mean(row_norms)
     shifted_pos = spatial_pos - np.mean(spatial_pos, axis=0)
@@ -841,7 +841,7 @@ def get_Markov_time_ls(all_results,comm_levels):
     :param all_results: output of multiscale clustering results
     :param comm_levels: selected community levels
     :return: Markov_time_ls is the list of markov times corresponding to selected community levels,
-    starting from finest scale preset at markov time 0, ending at coarsest scale (1 cluster)
+        starting from finest scale preset at markov time 0, ending at coarsest scale (1 cluster)
     """
 
     Markov_time_ls = []
@@ -869,7 +869,7 @@ def get_lr_exp_in_clusters(LR_ls,L_onehot_ls,R_onehot_ls,ligand_exp_dict,recepto
     :param all_results: output of multiscale clustering results
     :param comm_levels: selected community levels
     :return: Markov_time_ls is the list of markov times corresponding to selected community levels,
-    starting from finest scale preset at markov time 0, ending at coarsest scale (1 cluster)
+        starting from finest scale preset at markov time 0, ending at coarsest scale (1 cluster)
     """
     L_exp_ls = []
     R_exp_ls = []
@@ -902,7 +902,7 @@ def cluster_exp_ls(L_exp_in_clusters,R_exp_in_clusters,L_all_results,R_all_resul
     :param all_results: output of multiscale clustering results
     :param comm_levels: selected community levels
     :return: Markov_time_ls is the list of markov times corresponding to selected community levels,
-    starting from finest scale preset at markov time 0, ending at coarsest scale (1 cluster)
+        starting from finest scale preset at markov time 0, ending at coarsest scale (1 cluster)
     """
 
     L_allgenes_Markov_time_ls = get_Markov_time_ls(L_all_results,L_comm_levels)

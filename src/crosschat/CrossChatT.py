@@ -15,7 +15,7 @@ compute_interaction,get_lr_frequency_in_trees,get_new_lr_sup
 from .Multiple_trees import find_multiscale_trees, interaction_btw_trees
 from .Visualization import get_node_level_top_down,draw_MMT,draw_CCC_between_LR_union_MMT,draw_CCC_between_MMT
 
-class CrossChatT(object):
+class CrossChatT:
 
     def __init__(self, adata, species="human"):
         self.adata = adata

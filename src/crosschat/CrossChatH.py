@@ -9,7 +9,7 @@ compute_genes_geo_avg_vector,get_wilcox_score,get_onehot_ls,get_CCC_mtx,get_lr_e
 select_partitions,draw_multiscale_umap,get_pathway_genes,get_Markov_time_ls,obtain_spatial_pca,jaccard_dist, get_cluster_results
 from .Visualization import draw_CCC
 
-class CrossChatH(object):
+class CrossChatH:
     """
     A class for demonstrating documentation.
 
