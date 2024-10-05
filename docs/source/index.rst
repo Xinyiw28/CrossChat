@@ -7,7 +7,7 @@ Welcome to CrossChat's documentation!
 =====================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :hidden:
 
    README
