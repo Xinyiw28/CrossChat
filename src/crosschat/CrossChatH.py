@@ -10,23 +10,15 @@ select_partitions,draw_multiscale_umap,get_pathway_genes,get_Markov_time_ls,obta
 from .Visualization import draw_CCC
 
 class CrossChatH:
-    """
-    A class for demonstrating documentation.
-
-    Attributes
-    ----------
-    attribute : str
-        An attribute of the class.
-    """
 
     def __init__(self, adata, species="human", user_comm_ids=None):
         """
-        Initialize the MyClass object with an attribute.
+        Initialize the CrossChatH object. 
         
-        Parameters
-        ----------
-        attribute : str
-            The attribute to set for the object.
+        :param adata is the input adata object 
+        :param species is either human or mouse 
+        :param user_comm_ids is the multiscale clustering results if user wishes to input 
+        :return: the CrossChatH object
         """
         self.adata = adata
         self.mtx = adata.X
@@ -43,17 +35,12 @@ class CrossChatH:
 
     def prepare_adata(self, normalize=False, scale=False, input='allgenes'):
         """
-        This method performs an operation and returns a result.
+        Prepares the CrossChatH object. 
         
-        Parameters
-        ----------
-        param1 : int
-            The input parameter for the operation.
-        
-        Returns
-        -------
-        str
-            The result of the operation.
+        :param normalize is True if data needs to be normalized
+        :param scale is True if data needs to be scaled
+        :param input is allgenes if use all genes 
+        :return: the CrossChatH object
         """
         if normalize == True:
             sc.pp.normalize_total(self.adata, target_sum=1e4)
@@ -76,8 +63,11 @@ class CrossChatH:
 
     def Multsicale_clustering(self,cluster_by="allgenes",k=15):
         """
-        multiscale_clustering runs multiscale clustering on cells based on either allgenes, or ligands, or receptors
-        :param cluster_by: "allgenes", "lr"
+        Runs multiscale clustering on cells based on either allgenes, or ligands, or receptors
+        
+        :param cluster_by is the genes that user want to use to cluster, either "allgenes" or "lr" 
+        :param k: value of k in knn
+        :return CrossChatH object after multiscale clustering
         """
         if cluster_by == "allgenes":
             pca_embedding = self.adata.obsm['X_pca']
@@ -95,8 +85,12 @@ class CrossChatH:
 
     def Multsicale_clustering_spatial(self,cluster_by="allgenes",k=15,w=0.5):
         """
-        multiscale_clustering runs multiscale clustering on cells based on either allgenes, or ligands, or receptors
-        :param cluster_by: "allgenes", "lr"
+        Runs multiscale clustering on spatial data based on either allgenes, or ligands, or receptors
+        
+        :param cluster_by is the genes that user want to use to cluster, either "allgenes" or "lr" 
+        :param k is value of k in knn 
+        :param w is the weight 
+        :return CrossChatH object after multiscale clustering
         """
         if cluster_by == "allgenes":
             pca_embedding = self.adata.obsm['X_pca']
@@ -116,6 +110,12 @@ class CrossChatH:
             self.R_allresults = multiscale_clustering(R_spatial_pca, min_scale=-1, max_scale=4, n_scale=100, n_tries=20,k=k)
 
     def select_partitions(self, max_nvi=0.1, window_size=15, basin_radius=15, lr = "L"):
+        """
+        Select the desired hierarchical clustering.
+
+        :param lr is "L" (ligand) or "R" (receptor)
+        :return CrossChatH object after selecting partitions 
+        """
         if lr == "L":
             selected_partitions, selected_comm_ids, comm_levels = select_partitions(self.L_allresults, max_nvi=max_nvi,
                                                                     window_size=window_size,basin_radius=basin_radius)
@@ -133,6 +133,12 @@ class CrossChatH:
             self.R_allresults['onehot_ls'] = get_onehot_ls(self.R_allresults['selected_comm_ids'])
 
     def Draw_multiscale_umap(self,cluster_input="allgenes",spatial=False,save=None):
+        """
+        Draw umap of hierarchical clustering 
+
+        :param cluster_input is the input user wants to use for drawing umap. It can be "allgenes","L","R", or "userinput"
+        :return multiscale umap 
+        """        
         # cluster_input:"allgenes"/"L"/"R"/"userinput"
         if cluster_input == "userinput":
             draw_multiscale_umap(cluster_input='allgenes', adata=self.adata, all_results=self.L_allresults, save=save, spatial=spatial)
@@ -144,10 +150,20 @@ class CrossChatH:
             draw_multiscale_umap(cluster_input='R', adata=self.adata, all_results=self.R_allresults, save=save, spatial=spatial)
 
     def Draw_annotations_umap(self):
+        """
+        Draw umap of cell type annotations
+
+        :return multiscale umap 
+        """                
         sc.pl.umap(self.adata, color="annotations", save=False)
 
     def Detect_specific_LRs(self, topN=20):
+        """
+        Detect specific ligands and receptors
 
+        :param is the desired number of specific ligand-receptor pairs
+        :return list of specific ligand-receptor pairs
+        """        
         L_wilcox_dict = dict()
         R_wilcox_dict = dict()
         for gene in self.L_ls:
@@ -178,6 +194,7 @@ class CrossChatH:
 
         :param ligand/receptor is a list of ligands/receptors
         :param CCC_threshold is the threshold of CCC, interactions with strength below it are filtered
+        :return: visualization of CCC 
         """
         L_selected_comm_ids = self.L_allresults['selected_comm_ids']
         CCC_mtx = get_CCC_mtx(self.all_LR_filtered, ligand, receptor, self.L_allresults['onehot_ls'], self.R_allresults['onehot_ls'], self.ligand_exp_dict,
@@ -190,7 +207,12 @@ class CrossChatH:
                     L_is_general=True, R_is_general=True, CCC_linewidth=3, CCC_nodesize=1)
 
     def Cluster_LRs(self,LR_ls):
+        """
+        Cluster specific ligand-receptor pairs
 
+        :param LR_ls is the list of ligand-receptor pairs to be clustered         
+        :return clustering of ligand-receptor pairs
+        """        
         L_exp_in_clusters, R_exp_in_clusters = get_lr_exp_in_clusters(LR_ls, self.L_allresults['onehot_ls'],self.R_allresults['onehot_ls'], self.ligand_exp_dict,
                                                                       self.receptor_exp_dict)
         u, kmeans = cluster_exp_ls(L_exp_in_clusters, R_exp_in_clusters, self.L_allresults, self.R_allresults,
@@ -215,7 +237,11 @@ class CrossChatH:
         ax.add_artist(legend1)
 
     def Detect_active_pathways(self):
+        """
+        Detect active CCC pathways
 
+        :return active pathways involved in CCC
+        """        
         pathways = np.unique(self.all_LR_filtered['pathway_name'])
         pathway_total_CCC_ls = []
         for pathway in pathways:
@@ -232,6 +258,13 @@ class CrossChatH:
         return self.active_pathways
 
     def Draw_CCC(self,pathway,CCC_threshold=0.4,save=None):
+        """
+        Draw CCC between hierarchical clusters
+
+        :param pathway is the pathway to visualize
+        :param CCC_threshold is the threshold of CCC strengths to be visualized
+        :return visualization of hierarchical CCC 
+        """        
         # save = will save to './figures/{save}'
         L_onehot_ls = self.L_allresults['onehot_ls']
         R_onehot_ls = self.R_allresults['onehot_ls']
@@ -246,6 +279,12 @@ class CrossChatH:
                     L_is_general=True, R_is_general=True, CCC_linewidth=3, CCC_nodesize=1, save=save)
 
     def Cluster_pathways(self,nclusters=3):
+        """
+        Cluster active CCC pathways
+
+        :param nclusters is the desired number of clusters of pathways
+        :return visualiztion of active CCC pathways after clustering
+        """        
         L_onehot_ls = self.L_allresults['onehot_ls']
         R_onehot_ls = self.R_allresults['onehot_ls']
         L_Markov_time_ls = get_Markov_time_ls(self.L_allresults, self.L_allresults['comm_levels'])

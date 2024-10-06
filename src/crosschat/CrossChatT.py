@@ -18,6 +18,13 @@ from .Visualization import get_node_level_top_down,draw_MMT,draw_CCC_between_LR_
 class CrossChatT:
 
     def __init__(self, adata, species="human"):
+        """
+        Initialize the CrossChatT object. 
+        
+        :param adata is the input adata object 
+        :param species is either human or mouse 
+        :return: the CrossChatT object
+        """     
         self.adata = adata
         self.mtx = adata.X
         self.ncells = self.mtx.shape[0]
@@ -26,6 +33,14 @@ class CrossChatT:
         self.all_LR, self.cofactor_input, self.complex_input = load_files(species=self.species)
 
     def prepare_adata(self, normalize=False, scale=False, input='allgenes'):
+        """
+        Prepares the CrossChatT object. 
+        
+        :param normalize is True if data needs to be normalized
+        :param scale is True if data needs to be scaled
+        :param input is allgenes if use all genes 
+        :return: the CrossChatH object
+        """
         if normalize == True:
             sc.pp.normalize_total(self.adata, target_sum=1e4)
             sc.pp.log1p(self.adata)
@@ -44,6 +59,11 @@ class CrossChatT:
         self.all_LR_filtered = filter_all_LR(self.all_LR, self.ligand_exp_dict, self.receptor_exp_dict, self.ncells, threshold=0.005)
 
     def Draw_annotations_umap(self):
+        """
+        Draw umap of cell type annotations
+
+        :return multiscale umap 
+        """           
         sc.pl.umap(self.adata, color="annotations", save=False)
 
     def Binarization(self,threshold=0):
@@ -65,6 +85,17 @@ class CrossChatT:
 
     def Detect_trees(self,type="l",remove_cells_prop=0.9,support_size_threshold=30, inclusive_threshold=0.9,
                      disjoint_threshold=0.95,tree_size=4,tree_scales=3):
+        """
+        Detect trees involved in CCC in scRNA-seq data.
+
+        :param type is either "l" (ligand) or "r" (receptor)
+        :param remove_cells_prop keeps genes that are present in more than the proportion of cells
+        :param support_size_threshold keeps genes that are present in more than support_size_threshold cells
+        :param tree_size is the threshold of number of nodes in the tree
+        :param tree_scales is the number of levels in the tree
+        :return the CrossChatT object with detected trees
+        """            
+
         #type is l,r, or lr
         self.L_sup_mtx, all_LR_L_ind, self.L_ls, separate_L = prepare_lr_sup_mtx(self.all_LR_filtered, self.complex_input, 'L',
                                                                        self.mtx.T, self.genenames)
@@ -95,6 +126,16 @@ class CrossChatT:
 
     def Detect_trees_S(self,spatial_range=300,type="l",remove_cells_prop=0.9,support_size_threshold=30, inclusive_threshold=0.9,
                      disjoint_threshold=0.95,tree_size=4,tree_scales=3):
+        """
+        Detect trees involved in CCC in spatial data.
+
+        :param type is either "l" (ligand) or "r" (receptor)
+        :param remove_cells_prop keeps genes that are present in more than the proportion of cells
+        :param support_size_threshold keeps genes that are present in more than support_size_threshold cells
+        :param tree_size is the threshold of number of nodes in the tree
+        :param tree_scales is the number of levels in the tree
+        :return the CrossChatT object with detected trees
+        """    
         #type is l,r, or lr
         self.L_sup_mtx, all_LR_L_ind, self.L_ls, separate_L = prepare_lr_sup_mtx(self.all_LR_filtered, self.complex_input, 'L',
                                                                        self.mtx.T, self.genenames)
@@ -175,6 +216,13 @@ class CrossChatT:
             self.lr_trees = sorted(trees, key=lambda x: x.number_of_nodes(), reverse=True)
 
     def Draw_MMT(self,type="l",tree_inds=None,nodesize=20):
+        """
+        Visualize detected trees
+
+        :param type is either "l" or "r"
+        :param tree_inds is the index of tree in all detected trees
+        :return the visualization of detected trees
+        """ 
         # type is l,r
         if type == "l":
             trees = self.ligand_trees
@@ -200,7 +248,12 @@ class CrossChatT:
                      lr_node_mapping_dict=node_mapping_dict, nodesize=nodesize)
 
     def Draw_MMT_lr_union(self,tree_inds=None):
+        """
+        Visualize detected trees with lr_union as input 
 
+        :param tree_inds is the index of tree in all detected trees
+        :return the visualization of detected trees
+        """ 
         for tree_ind in tree_inds:
             print(tree_ind)
             LR_union_tree_node_ls = list(self.lr_trees[tree_ind].nodes)
@@ -244,7 +297,12 @@ class CrossChatT:
                                           save=None)
 
     def Draw_CCC_between_MMT(self,lr_tree_inds):
+        """
+        Visualize CCC detected between trees
 
+        :param lr_tree_inds is the index of ligand/receptor trees
+        :return the visualization of CCC between detected trees
+        """ 
         LR_list = self.all_LR_filtered[['Ligand', 'Receptor']].values
         LR_ind_list = list(map(lambda x: (np.where(self.L_ls == x[0])[0][0], np.where(self.R_ls == x[1])[0][0]), LR_list))
 
@@ -295,6 +353,15 @@ class CrossChatT:
                                  save=None)
 
     def find_interacting_trees(self, num_ligand_trees=10, num_receptor_trees=10, num_interation_threshold=1):
+        """
+        Obtain the pairs of interacting trees
+
+        :param num_ligand_trees is the number of top detected ligand trees that user is interested
+        :param num_receptor_trees is the number of top detected receptor trees that user is interested
+        :param number_interaction_threshold is the threshold of CCC strength 
+        :return the list of interacting trees
+        """         
+        
         interacting_tree_inds = []
         LR_list = self.all_LR_filtered[['Ligand', 'Receptor']].values
         LR_ind_list = list(map(lambda x: (np.where(self.L_ls == x[0])[0][0], np.where(self.R_ls == x[1])[0][0]), LR_list))
@@ -309,6 +376,12 @@ class CrossChatT:
         return sorted(interacting_tree_inds, key=lambda x:x[2], reverse=True)
 
     def plot_lr_frequency(self,type='l'):
+        """
+        Plot frequency of ligand/receptor occurrence in ligands/receptors trees
+
+        :param type is the type of ligands or receptors
+        :return the visualization of frequency of ligand/receptor occurrence in ligands/receptors trees
+        """         
         orig_L_indices_in_trees = []
         orig_R_indices_in_trees = []
         for tree in self.ligand_trees:
@@ -327,6 +400,13 @@ class CrossChatT:
             plt.barh(list(R_freq_dict.keys())[0:15][::-1], list(R_freq_dict.values())[0:15][::-1], color='#3C93C2')
 
     def Draw_big_tree(self,type='l',tree_inds=None):
+        """
+        Draw union of trees
+
+        :param type is the type of ligands or receptors
+        :param tree_inds is the list of indices for the set of trees user is interested in 
+        :return the visualization of frequency of ligand/receptor occurrence in ligands/receptors trees
+        """              
         selected_lr = []
         if type == 'l':
             selected_ligands = []
