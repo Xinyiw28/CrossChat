@@ -15,9 +15,9 @@ class CrossChatH:
         """
         Initialize the CrossChatH object. 
         
-        :param adata is the input adata object 
-        :param species is either human or mouse 
-        :param user_comm_ids is the multiscale clustering results if user wishes to input 
+        :params: adata is the input adata object 
+        :params: species is either human or mouse 
+        :params: user_comm_ids is the multiscale clustering results if user wishes to input 
         :return: the CrossChatH object
         """
         self.adata = adata
@@ -37,9 +37,9 @@ class CrossChatH:
         """
         Prepares the CrossChatH object. 
         
-        :param normalize is True if data needs to be normalized
-        :param scale is True if data needs to be scaled
-        :param input is allgenes if use all genes 
+        :params: normalize is True if data needs to be normalized
+        :params: scale is True if data needs to be scaled
+        :params: input is allgenes if use all genes 
         :return: the CrossChatH object
         """
         if normalize == True:
@@ -65,9 +65,9 @@ class CrossChatH:
         """
         Runs multiscale clustering on cells based on either allgenes, or ligands, or receptors
         
-        :param cluster_by is the genes that user want to use to cluster, either "allgenes" or "lr" 
-        :param k: value of k in knn
-        :return CrossChatH object after multiscale clustering
+        :params: cluster_by is the genes that user want to use to cluster, either "allgenes" or "lr" 
+        :params: k: value of k in knn
+        :return: CrossChatH object after multiscale clustering
         """
         if cluster_by == "allgenes":
             pca_embedding = self.adata.obsm['X_pca']
@@ -87,10 +87,10 @@ class CrossChatH:
         """
         Runs multiscale clustering on spatial data based on either allgenes, or ligands, or receptors
         
-        :param cluster_by is the genes that user want to use to cluster, either "allgenes" or "lr" 
-        :param k is value of k in knn 
-        :param w is the weight 
-        :return CrossChatH object after multiscale clustering
+        :params: cluster_by is the genes that user want to use to cluster, either "allgenes" or "lr" 
+        :params: k is value of k in knn 
+        :params: w is the weight 
+        :return: CrossChatH object after multiscale clustering
         """
         if cluster_by == "allgenes":
             pca_embedding = self.adata.obsm['X_pca']
@@ -113,8 +113,8 @@ class CrossChatH:
         """
         Select the desired hierarchical clustering.
 
-        :param lr is "L" (ligand) or "R" (receptor)
-        :return CrossChatH object after selecting partitions 
+        :params: lr is "L" (ligand) or "R" (receptor)
+        :return: CrossChatH object after selecting partitions 
         """
         if lr == "L":
             selected_partitions, selected_comm_ids, comm_levels = select_partitions(self.L_allresults, max_nvi=max_nvi,
@@ -136,8 +136,8 @@ class CrossChatH:
         """
         Draw umap of hierarchical clustering 
 
-        :param cluster_input is the input user wants to use for drawing umap. It can be "allgenes","L","R", or "userinput"
-        :return multiscale umap 
+        :params: cluster_input is the input user wants to use for drawing umap. It can be "allgenes","L","R", or "userinput"
+        :return: multiscale umap 
         """        
         # cluster_input:"allgenes"/"L"/"R"/"userinput"
         if cluster_input == "userinput":
@@ -153,7 +153,7 @@ class CrossChatH:
         """
         Draw umap of cell type annotations
 
-        :return multiscale umap 
+        :return: multiscale umap 
         """                
         sc.pl.umap(self.adata, color="annotations", save=False)
 
@@ -161,8 +161,8 @@ class CrossChatH:
         """
         Detect specific ligands and receptors
 
-        :param is the desired number of specific ligand-receptor pairs
-        :return list of specific ligand-receptor pairs
+        :params: is the desired number of specific ligand-receptor pairs
+        :return: list of specific ligand-receptor pairs
         """        
         L_wilcox_dict = dict()
         R_wilcox_dict = dict()
@@ -192,8 +192,8 @@ class CrossChatH:
         """
         Draw_CCC_LR draws the CCC between a pair of ligand and receptor between ligand clustering and receptor clustering
 
-        :param ligand/receptor is a list of ligands/receptors
-        :param CCC_threshold is the threshold of CCC, interactions with strength below it are filtered
+        :params: ligand/receptor is a list of ligands/receptors
+        :params: CCC_threshold is the threshold of CCC, interactions with strength below it are filtered
         :return: visualization of CCC 
         """
         L_selected_comm_ids = self.L_allresults['selected_comm_ids']
@@ -210,8 +210,8 @@ class CrossChatH:
         """
         Cluster specific ligand-receptor pairs
 
-        :param LR_ls is the list of ligand-receptor pairs to be clustered         
-        :return clustering of ligand-receptor pairs
+        :params: LR_ls is the list of ligand-receptor pairs to be clustered         
+        :return: clustering of ligand-receptor pairs
         """        
         L_exp_in_clusters, R_exp_in_clusters = get_lr_exp_in_clusters(LR_ls, self.L_allresults['onehot_ls'],self.R_allresults['onehot_ls'], self.ligand_exp_dict,
                                                                       self.receptor_exp_dict)
@@ -240,7 +240,7 @@ class CrossChatH:
         """
         Detect active CCC pathways
 
-        :return active pathways involved in CCC
+        :return: active pathways involved in CCC
         """        
         pathways = np.unique(self.all_LR_filtered['pathway_name'])
         pathway_total_CCC_ls = []
@@ -261,9 +261,9 @@ class CrossChatH:
         """
         Draw CCC between hierarchical clusters
 
-        :param pathway is the pathway to visualize
-        :param CCC_threshold is the threshold of CCC strengths to be visualized
-        :return visualization of hierarchical CCC 
+        :params: pathway is the pathway to visualize
+        :params: CCC_threshold is the threshold of CCC strengths to be visualized
+        :return: visualization of hierarchical CCC 
         """        
         # save = will save to './figures/{save}'
         L_onehot_ls = self.L_allresults['onehot_ls']
@@ -282,8 +282,8 @@ class CrossChatH:
         """
         Cluster active CCC pathways
 
-        :param nclusters is the desired number of clusters of pathways
-        :return visualiztion of active CCC pathways after clustering
+        :params: nclusters is the desired number of clusters of pathways
+        :return: visualiztion of active CCC pathways after clustering
         """        
         L_onehot_ls = self.L_allresults['onehot_ls']
         R_onehot_ls = self.R_allresults['onehot_ls']

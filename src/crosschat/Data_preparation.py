@@ -99,7 +99,7 @@ def create_adata(ds_mtx=None, ds_geneNames:pd.DataFrame=None, ds_annotations:pd.
     return adata
 
 def prepare_adata(adata, normalize=False, scale=False, input='allgenes'):
-    #
+    
     if normalize == True:
         sc.pp.normalize_total(adata, target_sum=1e4)
         sc.pp.log1p(adata)
@@ -246,11 +246,11 @@ def prepare_lr_sup_mtx(all_LR,complex_input,lr='L',ds_mtx=None,ds_geneNames=None
     """
     prepare_lr_sup_mtx obtain the support matrix of ligands/receptors
 
-    :param all_LR: LR interactions from CellChatDB
-    :param complex_input: complex_input file from CellChatDB
-    :param lr: 'L' or 'R'
-    :param ds_mtx: gene expression matrix
-    :param ds_geneNames: dataframe of gene names, with column name as 0
+    :params: all_LR: LR interactions from CellChatDB
+    :params: complex_input: complex_input file from CellChatDB
+    :params: lr: 'L' or 'R'
+    :params: ds_mtx: gene expression matrix
+    :params: ds_geneNames: dataframe of gene names, with column name as 0
     :return: lr_sup_mtx is the support matrix of ligands/receptors,
         all_LR_lr_ind is dataframe of list of indices of ligands/receptors in all_LR,
         lr_ls is list of unique ligands/receptors, in which ligand/receptor complex uses its complex name
@@ -302,9 +302,9 @@ def prepare_lr_union_sup_mtx(all_LR_filtered, L_sup_mtx, R_sup_mtx, L_ls,R_ls):
     """
     prepare_lr_union_sup_mtx obtain the support matrix of union of ligand and receptor in each ligand-receptor pair of all_LR_filtered
 
-    :param all_LR_filtered: filtered LR interactions from CellChatDB, only including LR pairs that both exist in the dataset
-    :param L_sup_mtx: support matrix of all lignds
-    :param L_ls: list of ligands, in complex name form
+    :params: all_LR_filtered: filtered LR interactions from CellChatDB, only including LR pairs that both exist in the dataset
+    :params: L_sup_mtx: support matrix of all lignds
+    :params: L_ls: list of ligands, in complex name form
     :return: LR_sup_mtx is the support matrix of union of ligand and receptor pair, sorted according to all_LR_filtered
     """
 
@@ -325,12 +325,12 @@ def prepare_lr_union_sup_mtx(all_LR_filtered, L_sup_mtx, R_sup_mtx, L_ls,R_ls):
 def draw_multiscale_umap(cluster_input,adata,all_results,save=None,spatial=False):
     """
     draw_multiscale_umap draws the umap of multiscale clustering results
-    :param cluster_input: 'L','R','allgenes'
-    :param adata:
-    :param all_results:
-    :param comm_levels:
-    :param selected_partitions:
-    :param save: directory (example: /Users/abc/Desktop/directory_name)
+    :params: cluster_input: 'L','R','allgenes'
+    :params: adata:
+    :params: all_results:
+    :params: comm_levels:
+    :params: selected_partitions:
+    :params: save: directory (example: /Users/abc/Desktop/directory_name)
     """
     comm_levels = all_results['comm_levels']
     n_scales = len(comm_levels)
@@ -388,9 +388,9 @@ def get_gene_exp(gene,ds_geneNames,ds_mtx):
     """
     get_gene_exp obtains gene expression of input gene from gene expression matrix.
 
-    :param gene: the input gene from which to obtain its gene expression
-    :param ds_geneNames: dataframe of gene names of gene expression matrix
-    :param ds_mtx: gene expression matrix
+    :params: gene: the input gene from which to obtain its gene expression
+    :params: ds_geneNames: dataframe of gene names of gene expression matrix
+    :params: ds_mtx: gene expression matrix
     :return: gene expression of input gene
     """
     ncells = np.shape(ds_mtx)[1]
@@ -407,7 +407,7 @@ def get_onehot_ls(selected_comm_ids):
     """
     get_onehot_ls Obtain onehot list of each cluster based on a list of selected partitions.
 
-    :param selected_partitions: list of arrays of selected partitions, each array represents a partition at one scale
+    :params: selected_partitions: list of arrays of selected partitions, each array represents a partition at one scale
     :return: list of onehot vectors of selected partitions
     """
 
@@ -429,8 +429,8 @@ def get_wilcox_score(gene_exp,onehot_ls):
     get_wilcox_score runs Wilcoxan rank sum test on the input gene of each multiscale cluster and returns its
     minimum score, the scale and cluster id of the multiscale cluster that the gene is most specific to
 
-    :param gene_exp: gene expression
-    :param onehot_ls: list of onehot vectors of selected partitions
+    :params: gene_exp: gene expression
+    :params: onehot_ls: list of onehot vectors of selected partitions
     :return: wilcox_score is the triple [min_score,argmin_scale,argmin_cluster]
     """
     w_score_ls = []
@@ -458,9 +458,9 @@ def assign_top_marker_to_cluster(adata,cluster_input,comm_levels):
     """
     assign_top_marker_to_cluster obtains the list of top marker to each multiscale cluster
 
-    :param adata:
-    :param cluster_input: 'L'/'R'/'allgenes'
-    :param comm_levels:
+    :params: adata:
+    :params: cluster_input: 'L'/'R'/'allgenes'
+    :params: comm_levels:
     :return: top_marker_ls
     """
     top_marker_ls = []
@@ -473,10 +473,10 @@ def find_lr_intersected_clusters(lr_inds, lr_onehot_ls, lr_sup_mtx):
     """
     find_lr_intersected_clusters obtain ligands/receptors intersected clusters.
 
-    :param lr: 'L' or 'R'
-    :param lr_inds: list of indices of ligand or receptor in L_ls or R_ls
-    :param lr_onehot_ls: list of onehot vectors of l/r multiscale clusters
-    :param lr_sup_mtx: L_sup_mtx or R_sup_mtx
+    :params: lr: 'L' or 'R'
+    :params: lr_inds: list of indices of ligand or receptor in L_ls or R_ls
+    :params: lr_onehot_ls: list of onehot vectors of l/r multiscale clusters
+    :params: lr_sup_mtx: L_sup_mtx or R_sup_mtx
     :return: list of arrays of onehot vectors of ligands/receptors intersected clusters of lr_onehot_ls
     """
 
@@ -560,7 +560,7 @@ def get_rel_i_j_ls(onehot_ls):
     get_rel_i_j_ls obtain the list of arrays of relationship of multiscale clusters, each array represents
     the correspondence relationship of a finer cluster to a coarser cluster
 
-    :param onehot_ls: the list of onehot vectors of multiscale ligand clusters
+    :params: onehot_ls: the list of onehot vectors of multiscale ligand clusters
     :return: rel_i_j_ls is list of arrays of onehot vectors of relationship of multiscale clusters
     """
     rel_i_j_ls = []
@@ -592,7 +592,7 @@ def convert_complex_to_genes_ls(complex_input_cap,gene_complex):
     convert_complex_to_genes_ls obtain the list of separate genes from gene complex;
     if the input is a single gene, then output the list with single gene
 
-    :gene_complex: the gene complex to be separated
+    :params: gene_complex: the gene complex to be separated
     :return: genes is the list of genes corresponding to the gene_complex
     """
 
@@ -609,7 +609,7 @@ def get_pathway_genes(all_LR,pathway):
     get_pathway_genes obtain the list of ligands and receptors in ds_geneNames of the input pathway
 
     :all_LR: dataframe of ligand-receptor interactions from CellChatDB
-    :param pathway: name of pathway
+    :params: pathway: name of pathway
     :return: pathway_ligands is the list of ligands of input pathway, in complex form
     """
     pathway_ind = np.where(all_LR['pathway_name'].values == pathway)[0]
@@ -622,8 +622,8 @@ def get_gene_ind_in_gene_ls(genes,gene_ls):
     """
     get_pathway_genes obtain the list of indices of genes in gene_ls
 
-    :param genes: the gene names, needs to be all upper cased
-    :param gene_ls: the list of genes
+    :params: genes: the gene names, needs to be all upper cased
+    :params: gene_ls: the list of genes
     :return: gene_ind the list of indices of genes in gene_ls
     """
 
@@ -639,7 +639,7 @@ def compute_genes_geo_avg_vector(genes_exp_ls):
     """
     compute_genes_geo_avg_vector obtain the gene expression vector of geometric mean of a list of genes
 
-    :param genes_exp_ls: the list of gene expression of input single genes
+    :params: genes_exp_ls: the list of gene expression of input single genes
     :return: gene_exp is the gene expression vector of geometric mean of the list of input gene expressions
     """
     gene_exp = np.ones(len(genes_exp_ls[0]))
@@ -838,8 +838,8 @@ def get_Markov_time_ls(all_results,comm_levels):
     """
     get_Markov_time_ls obtain the list of markov times corresponding to selected community levels
 
-    :param all_results: output of multiscale clustering results
-    :param comm_levels: selected community levels
+    :params: all_results: output of multiscale clustering results
+    :params: comm_levels: selected community levels
     :return: Markov_time_ls is the list of markov times corresponding to selected community levels,
         starting from finest scale preset at markov time 0, ending at coarsest scale (1 cluster)
     """
@@ -865,9 +865,9 @@ def get_lr_exp_in_clusters(LR_ls,L_onehot_ls,R_onehot_ls,ligand_exp_dict,recepto
     """
     get_lr_exp_in_clusters obtain the list of markov times corresponding to selected community levels
 
-    :param LR_ls: list of [[L1,R1],[L2,R2],...]
-    :param all_results: output of multiscale clustering results
-    :param comm_levels: selected community levels
+    :params: LR_ls: list of [[L1,R1],[L2,R2],...]
+    :params: all_results: output of multiscale clustering results
+    :params: comm_levels: selected community levels
     :return: Markov_time_ls is the list of markov times corresponding to selected community levels,
         starting from finest scale preset at markov time 0, ending at coarsest scale (1 cluster)
     """
@@ -899,8 +899,8 @@ def cluster_exp_ls(L_exp_in_clusters,R_exp_in_clusters,L_all_results,R_all_resul
     """
     cluster_exp_ls obtain the list of markov times corresponding to selected community levels
 
-    :param all_results: output of multiscale clustering results
-    :param comm_levels: selected community levels
+    :params: all_results: output of multiscale clustering results
+    :params: comm_levels: selected community levels
     :return: Markov_time_ls is the list of markov times corresponding to selected community levels,
         starting from finest scale preset at markov time 0, ending at coarsest scale (1 cluster)
     """

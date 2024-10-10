@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>crosschat package &#8212; CrossChat 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="crosschat" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="crosschat-package">
+<h1>crosschat package<a class="headerlink" href="#crosschat-package" title="Link to this heading">¶</a></h1>
+<section id="module-crosschat.CrossChatH">
+<span id="crosschat-crosschath-module"></span><h2>crosschat.CrossChatH module<a class="headerlink" href="#module-crosschat.CrossChatH" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crosschat.CrossChatH.</span></span><span class="sig-name descname"><span class="pre">CrossChatH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'human'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_comm_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.Cluster_LRs">
+<span class="sig-name descname"><span class="pre">Cluster_LRs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">LR_ls</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.Cluster_LRs" title="Link to this definition">¶</a></dt>
+<dd><p>Cluster specific ligand-receptor pairs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>LR_ls is the list of ligand-receptor pairs to be clustered</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>clustering of ligand-receptor pairs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.Cluster_pathways">
+<span class="sig-name descname"><span class="pre">Cluster_pathways</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nclusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.Cluster_pathways" title="Link to this definition">¶</a></dt>
+<dd><p>Cluster active CCC pathways</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nclusters is the desired number of clusters of pathways</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>visualiztion of active CCC pathways after clustering</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.Detect_active_pathways">
+<span class="sig-name descname"><span class="pre">Detect_active_pathways</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.Detect_active_pathways" title="Link to this definition">¶</a></dt>
+<dd><p>Detect active CCC pathways</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>active pathways involved in CCC</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.Detect_specific_LRs">
+<span class="sig-name descname"><span class="pre">Detect_specific_LRs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topN</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.Detect_specific_LRs" title="Link to this definition">¶</a></dt>
+<dd><p>Detect specific ligands and receptors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>is the desired number of specific ligand-receptor pairs</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of specific ligand-receptor pairs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.Draw_CCC">
+<span class="sig-name descname"><span class="pre">Draw_CCC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathway</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CCC_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.Draw_CCC" title="Link to this definition">¶</a></dt>
+<dd><p>Draw CCC between hierarchical clusters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pathway is the pathway to visualize</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>CCC_threshold is the threshold of CCC strengths to be visualized</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>visualization of hierarchical CCC</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.Draw_CCC_LR">
+<span class="sig-name descname"><span class="pre">Draw_CCC_LR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ligand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">receptor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CCC_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.Draw_CCC_LR" title="Link to this definition">¶</a></dt>
+<dd><p>Draw_CCC_LR draws the CCC between a pair of ligand and receptor between ligand clustering and receptor clustering</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ligand/receptor is a list of ligands/receptors</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>CCC_threshold is the threshold of CCC, interactions with strength below it are filtered</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>visualization of CCC</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.Draw_annotations_umap">
+<span class="sig-name descname"><span class="pre">Draw_annotations_umap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.Draw_annotations_umap" title="Link to this definition">¶</a></dt>
+<dd><p>Draw umap of cell type annotations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>multiscale umap</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.Draw_multiscale_umap">
+<span class="sig-name descname"><span class="pre">Draw_multiscale_umap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'allgenes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.Draw_multiscale_umap" title="Link to this definition">¶</a></dt>
+<dd><p>Draw umap of hierarchical clustering</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>cluster_input is the input user wants to use for drawing umap. It can be “allgenes”,”L”,”R”, or “userinput”</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>multiscale umap</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.Multsicale_clustering">
+<span class="sig-name descname"><span class="pre">Multsicale_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'allgenes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.Multsicale_clustering" title="Link to this definition">¶</a></dt>
+<dd><p>Runs multiscale clustering on cells based on either allgenes, or ligands, or receptors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>cluster_by is the genes that user want to use to cluster, either “allgenes” or “lr”</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>k: value of k in knn</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CrossChatH object after multiscale clustering</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.Multsicale_clustering_spatial">
+<span class="sig-name descname"><span class="pre">Multsicale_clustering_spatial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'allgenes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.Multsicale_clustering_spatial" title="Link to this definition">¶</a></dt>
+<dd><p>Runs multiscale clustering on spatial data based on either allgenes, or ligands, or receptors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>cluster_by is the genes that user want to use to cluster, either “allgenes” or “lr”</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>k is value of k in knn</p>
+</dd>
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>w is the weight</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CrossChatH object after multiscale clustering</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.jaccard_dist">
+<span class="sig-name descname"><span class="pre">jaccard_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comm_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">celltype_annotations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.jaccard_dist" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.prepare_adata">
+<span class="sig-name descname"><span class="pre">prepare_adata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'allgenes'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.prepare_adata" title="Link to this definition">¶</a></dt>
+<dd><p>Prepares the CrossChatH object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>normalize is True if data needs to be normalized</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>scale is True if data needs to be scaled</p>
+</dd>
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>input is allgenes if use all genes</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the CrossChatH object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatH.CrossChatH.select_partitions">
+<span class="sig-name descname"><span class="pre">select_partitions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_nvi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basin_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'L'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatH.CrossChatH.select_partitions" title="Link to this definition">¶</a></dt>
+<dd><p>Select the desired hierarchical clustering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>lr is “L” (ligand) or “R” (receptor)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CrossChatH object after selecting partitions</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-crosschat.CrossChatT">
+<span id="crosschat-crosschatt-module"></span><h2>crosschat.CrossChatT module<a class="headerlink" href="#module-crosschat.CrossChatT" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crosschat.CrossChatT.</span></span><span class="sig-name descname"><span class="pre">CrossChatT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT.Binarization">
+<span class="sig-name descname"><span class="pre">Binarization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT.Binarization" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT.Detect_trees">
+<span class="sig-name descname"><span class="pre">Detect_trees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_cells_prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support_size_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inclusive_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disjoint_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_scales</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT.Detect_trees" title="Link to this definition">¶</a></dt>
+<dd><p>Detect trees involved in CCC in scRNA-seq data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>type is either “l” (ligand) or “r” (receptor)</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>remove_cells_prop keeps genes that are present in more than the proportion of cells</p>
+</dd>
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>support_size_threshold keeps genes that are present in more than support_size_threshold cells</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>tree_size is the threshold of number of nodes in the tree</p>
+</dd>
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tree_scales is the number of levels in the tree</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the CrossChatT object with detected trees</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT.Detect_trees_S">
+<span class="sig-name descname"><span class="pre">Detect_trees_S</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_cells_prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support_size_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inclusive_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disjoint_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_scales</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT.Detect_trees_S" title="Link to this definition">¶</a></dt>
+<dd><p>Detect trees involved in CCC in spatial data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>type is either “l” (ligand) or “r” (receptor)</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>remove_cells_prop keeps genes that are present in more than the proportion of cells</p>
+</dd>
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>support_size_threshold keeps genes that are present in more than support_size_threshold cells</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>tree_size is the threshold of number of nodes in the tree</p>
+</dd>
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tree_scales is the number of levels in the tree</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the CrossChatT object with detected trees</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT.Draw_CCC_between_MMT">
+<span class="sig-name descname"><span class="pre">Draw_CCC_between_MMT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lr_tree_inds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT.Draw_CCC_between_MMT" title="Link to this definition">¶</a></dt>
+<dd><p>Visualize CCC detected between trees</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>lr_tree_inds is the index of ligand/receptor trees</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the visualization of CCC between detected trees</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT.Draw_MMT">
+<span class="sig-name descname"><span class="pre">Draw_MMT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_inds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodesize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT.Draw_MMT" title="Link to this definition">¶</a></dt>
+<dd><p>Visualize detected trees</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>type is either “l” or “r”</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>tree_inds is the index of tree in all detected trees</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the visualization of detected trees</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT.Draw_MMT_lr_union">
+<span class="sig-name descname"><span class="pre">Draw_MMT_lr_union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree_inds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT.Draw_MMT_lr_union" title="Link to this definition">¶</a></dt>
+<dd><p>Visualize detected trees with lr_union as input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tree_inds is the index of tree in all detected trees</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the visualization of detected trees</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT.Draw_annotations_umap">
+<span class="sig-name descname"><span class="pre">Draw_annotations_umap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT.Draw_annotations_umap" title="Link to this definition">¶</a></dt>
+<dd><p>Draw umap of cell type annotations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>multiscale umap</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT.Draw_big_tree">
+<span class="sig-name descname"><span class="pre">Draw_big_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_inds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT.Draw_big_tree" title="Link to this definition">¶</a></dt>
+<dd><p>Draw union of trees</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>type is the type of ligands or receptors</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>tree_inds is the list of indices for the set of trees user is interested in</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the visualization of frequency of ligand/receptor occurrence in ligands/receptors trees</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT.find_interacting_trees">
+<span class="sig-name descname"><span class="pre">find_interacting_trees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_ligand_trees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_receptor_trees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_interation_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT.find_interacting_trees" title="Link to this definition">¶</a></dt>
+<dd><p>Obtain the pairs of interacting trees</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>num_ligand_trees is the number of top detected ligand trees that user is interested</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>num_receptor_trees is the number of top detected receptor trees that user is interested</p>
+</dd>
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>number_interaction_threshold is the threshold of CCC strength</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the list of interacting trees</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT.plot_lr_frequency">
+<span class="sig-name descname"><span class="pre">plot_lr_frequency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT.plot_lr_frequency" title="Link to this definition">¶</a></dt>
+<dd><p>Plot frequency of ligand/receptor occurrence in ligands/receptors trees</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>type is the type of ligands or receptors</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the visualization of frequency of ligand/receptor occurrence in ligands/receptors trees</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crosschat.CrossChatT.CrossChatT.prepare_adata">
+<span class="sig-name descname"><span class="pre">prepare_adata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'allgenes'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crosschat.CrossChatT.CrossChatT.prepare_adata" title="Link to this definition">¶</a></dt>
+<dd><p>Prepares the CrossChatT object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>normalize is True if data needs to be normalized</p>
+</dd>
+<dt class="field-even">Params<span class="colon">:</span></dt>
+<dd class="field-even"><p>scale is True if data needs to be scaled</p>
+</dd>
+<dt class="field-odd">Params<span class="colon">:</span></dt>
+<dd class="field-odd"><p>input is allgenes if use all genes</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the CrossChatH object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CrossChat</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html"><em>CrossChat</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/CrossChatH_tutorial.html">Part I: CrossChatH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/CrossChatT_tutorial.html">Part II: CrossChatT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/CrossChatT_tutorial.html#CrossChatT-on-spatial-dataset">CrossChatT on spatial dataset</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">crosschat</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">crosschat package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-crosschat.CrossChatH">crosschat.CrossChatH module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#crosschat.CrossChatH.CrossChatH"><code class="docutils literal notranslate"><span class="pre">CrossChatH</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-crosschat.CrossChatT">crosschat.CrossChatT module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#crosschat.CrossChatT.CrossChatT"><code class="docutils literal notranslate"><span class="pre">CrossChatT</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">crosschat</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">crosschat</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Xinyi Wang.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/crosschat.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -36,7 +36,9 @@ class Arrow3D(FancyArrowPatch):
         return np.min(zs)
 
 def _arrow3D(ax, x, y, z, dx, dy, dz, *args, **kwargs):
-    '''Add an 3d arrow to an `Axes3D` instance.'''
+    """
+    Add an 3d arrow to an `Axes3D` instance.
+    """
 
     arrow = Arrow3D(x, y, z, dx, dy, dz, *args, **kwargs)
     ax.add_artist(arrow)
@@ -108,13 +110,13 @@ def draw_CCC(L_onehot_ls, R_onehot_ls, CCC_mtx, L_node_mapping_dict=None, R_node
     """
     draw_CCC draws CCC of 4 cases: 1) allgenes to allgenes 2)L-general to R-general 3)L-MMT to R-general 4)L-general to R-MMT
 
-    :param all_LR: LR interactions from CellChatDB
-    :param complex_input: complex_input file from CellChatDB
-    :param lr: 'L' or 'R'
-    :param ds_mtx: gene expression matrix
-    :param ds_geneNames: dataframe of gene names
-    :param angle: horizontal angle of view
-    :param height_angle: height angle of view
+    :param: all_LR: LR interactions from CellChatDB
+    :param: complex_input: complex_input file from CellChatDB
+    :param: lr: 'L' or 'R'
+    :param: ds_mtx: gene expression matrix
+    :param: ds_geneNames: dataframe of gene names
+    :param: angle: horizontal angle of view
+    :param: height_angle: height angle of view
     :return: lr_sup_mtx is the support matrix of ligands/receptors,
         all_LR_lr_ind is dataframe of list of indices of ligands/receptors in all_LR,
         lr_ls is list of unique ligands/receptors, in which ligand/receptor complex uses its complex name
@@ -255,11 +257,11 @@ def draw_intersected_CCC(pathway,all_LR,L_ls,R_ls,L_onehot_ls,R_onehot_ls,L_sup_
     """
     draw_CCC draws CCC of 4 cases: 1) allgenes to allgenes 2)L-general to R-general 3)L-MMT to R-general 4)L-general to R-MMT
 
-    :param all_LR: LR interactions from CellChatDB
-    :param complex_input: complex_input file from CellChatDB
-    :param lr: 'L' or 'R'
-    :param ds_mtx: gene expression matrix
-    :param ds_geneNames: dataframe of gene names
+    :param: all_LR: LR interactions from CellChatDB
+    :param: complex_input: complex_input file from CellChatDB
+    :param: lr: 'L' or 'R'
+    :param: ds_mtx: gene expression matrix
+    :param: ds_geneNames: dataframe of gene names
     :return: lr_sup_mtx is the support matrix of ligands/receptors,
         all_LR_lr_ind is dataframe of list of indices of ligands/receptors in all_LR,
         lr_ls is list of unique ligands/receptors, in which ligand/receptor complex uses its complex name

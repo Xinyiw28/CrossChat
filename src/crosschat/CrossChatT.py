@@ -21,9 +21,9 @@ class CrossChatT:
         """
         Initialize the CrossChatT object. 
         
-        :param adata is the input adata object 
-        :param species is either human or mouse 
-        :return: the CrossChatT object
+        :params: adata is the input adata object 
+        :params: species is either human or mouse 
+        :return:  the CrossChatT object
         """     
         self.adata = adata
         self.mtx = adata.X
@@ -36,10 +36,10 @@ class CrossChatT:
         """
         Prepares the CrossChatT object. 
         
-        :param normalize is True if data needs to be normalized
-        :param scale is True if data needs to be scaled
-        :param input is allgenes if use all genes 
-        :return: the CrossChatH object
+        :params: normalize is True if data needs to be normalized
+        :params: scale is True if data needs to be scaled
+        :params: input is allgenes if use all genes 
+        :return:  the CrossChatH object
         """
         if normalize == True:
             sc.pp.normalize_total(self.adata, target_sum=1e4)
@@ -62,7 +62,7 @@ class CrossChatT:
         """
         Draw umap of cell type annotations
 
-        :return multiscale umap 
+        :return:  multiscale umap 
         """           
         sc.pl.umap(self.adata, color="annotations", save=False)
 
@@ -88,12 +88,12 @@ class CrossChatT:
         """
         Detect trees involved in CCC in scRNA-seq data.
 
-        :param type is either "l" (ligand) or "r" (receptor)
-        :param remove_cells_prop keeps genes that are present in more than the proportion of cells
-        :param support_size_threshold keeps genes that are present in more than support_size_threshold cells
-        :param tree_size is the threshold of number of nodes in the tree
-        :param tree_scales is the number of levels in the tree
-        :return the CrossChatT object with detected trees
+        :params: type is either "l" (ligand) or "r" (receptor)
+        :params: remove_cells_prop keeps genes that are present in more than the proportion of cells
+        :params: support_size_threshold keeps genes that are present in more than support_size_threshold cells
+        :params: tree_size is the threshold of number of nodes in the tree
+        :params: tree_scales is the number of levels in the tree
+        :return:  the CrossChatT object with detected trees
         """            
 
         #type is l,r, or lr
@@ -129,12 +129,12 @@ class CrossChatT:
         """
         Detect trees involved in CCC in spatial data.
 
-        :param type is either "l" (ligand) or "r" (receptor)
-        :param remove_cells_prop keeps genes that are present in more than the proportion of cells
-        :param support_size_threshold keeps genes that are present in more than support_size_threshold cells
-        :param tree_size is the threshold of number of nodes in the tree
-        :param tree_scales is the number of levels in the tree
-        :return the CrossChatT object with detected trees
+        :params: type is either "l" (ligand) or "r" (receptor)
+        :params: remove_cells_prop keeps genes that are present in more than the proportion of cells
+        :params: support_size_threshold keeps genes that are present in more than support_size_threshold cells
+        :params: tree_size is the threshold of number of nodes in the tree
+        :params: tree_scales is the number of levels in the tree
+        :return:  the CrossChatT object with detected trees
         """    
         #type is l,r, or lr
         self.L_sup_mtx, all_LR_L_ind, self.L_ls, separate_L = prepare_lr_sup_mtx(self.all_LR_filtered, self.complex_input, 'L',
@@ -219,9 +219,9 @@ class CrossChatT:
         """
         Visualize detected trees
 
-        :param type is either "l" or "r"
-        :param tree_inds is the index of tree in all detected trees
-        :return the visualization of detected trees
+        :params: type is either "l" or "r"
+        :params: tree_inds is the index of tree in all detected trees
+        :return:  the visualization of detected trees
         """ 
         # type is l,r
         if type == "l":
@@ -251,8 +251,8 @@ class CrossChatT:
         """
         Visualize detected trees with lr_union as input 
 
-        :param tree_inds is the index of tree in all detected trees
-        :return the visualization of detected trees
+        :params: tree_inds is the index of tree in all detected trees
+        :return:  the visualization of detected trees
         """ 
         for tree_ind in tree_inds:
             print(tree_ind)
@@ -300,8 +300,8 @@ class CrossChatT:
         """
         Visualize CCC detected between trees
 
-        :param lr_tree_inds is the index of ligand/receptor trees
-        :return the visualization of CCC between detected trees
+        :params: lr_tree_inds is the index of ligand/receptor trees
+        :return:  the visualization of CCC between detected trees
         """ 
         LR_list = self.all_LR_filtered[['Ligand', 'Receptor']].values
         LR_ind_list = list(map(lambda x: (np.where(self.L_ls == x[0])[0][0], np.where(self.R_ls == x[1])[0][0]), LR_list))
@@ -356,10 +356,10 @@ class CrossChatT:
         """
         Obtain the pairs of interacting trees
 
-        :param num_ligand_trees is the number of top detected ligand trees that user is interested
-        :param num_receptor_trees is the number of top detected receptor trees that user is interested
-        :param number_interaction_threshold is the threshold of CCC strength 
-        :return the list of interacting trees
+        :params: num_ligand_trees is the number of top detected ligand trees that user is interested
+        :params: num_receptor_trees is the number of top detected receptor trees that user is interested
+        :params: number_interaction_threshold is the threshold of CCC strength 
+        :return:  the list of interacting trees
         """         
         
         interacting_tree_inds = []
@@ -379,8 +379,8 @@ class CrossChatT:
         """
         Plot frequency of ligand/receptor occurrence in ligands/receptors trees
 
-        :param type is the type of ligands or receptors
-        :return the visualization of frequency of ligand/receptor occurrence in ligands/receptors trees
+        :params: type is the type of ligands or receptors
+        :return:  the visualization of frequency of ligand/receptor occurrence in ligands/receptors trees
         """         
         orig_L_indices_in_trees = []
         orig_R_indices_in_trees = []
@@ -403,9 +403,9 @@ class CrossChatT:
         """
         Draw union of trees
 
-        :param type is the type of ligands or receptors
-        :param tree_inds is the list of indices for the set of trees user is interested in 
-        :return the visualization of frequency of ligand/receptor occurrence in ligands/receptors trees
+        :params: type is the type of ligands or receptors
+        :params: tree_inds is the list of indices for the set of trees user is interested in 
+        :return:  the visualization of frequency of ligand/receptor occurrence in ligands/receptors trees
         """              
         selected_lr = []
         if type == 'l':
