@@ -14,5 +14,8 @@ sphinx-gallery==0.11.1
 ipykernel
 pygenstability==0.2.1
 scanpy==1.9.6
+numpy==1.26.4
+commot==0.0.3
+wordcloud==1.9.3
 myst_parser
 git+https://github.com/Xinyiw28/CrossChat.git@main
