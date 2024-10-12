@@ -15,4 +15,4 @@ ipykernel
 pygenstability==0.2.1
 scanpy==1.9.6
 myst_parser
-crosschat
+git+https://github.com/Xinyiw28/CrossChat.git@main
