@@ -1,4 +1,4 @@
-crosschat package
+API
 =================
 
 crosschat.CrossChatH module
@@ -14,5 +14,5 @@ crosschat.CrossChatT module
 
 .. automodule:: crosschat.CrossChatT
    :members:
-   :undoc-members:
+   :undoc-members: 
    :show-inheritance:

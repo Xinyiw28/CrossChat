@@ -13,7 +13,7 @@ class CrossChatH:
 
     def __init__(self, adata, species="human", user_comm_ids=None):
         """
-        Initialize the CrossChatH object. 
+        Initialize the CrossChatH object 
         
         :params: adata is the input adata object 
         :params: species is either human or mouse 
@@ -35,7 +35,7 @@ class CrossChatH:
 
     def prepare_adata(self, normalize=False, scale=False, input='allgenes'):
         """
-        Prepares the CrossChatH object. 
+        Prepares the CrossChatH object 
         
         :params: normalize is True if data needs to be normalized
         :params: scale is True if data needs to be scaled
@@ -111,7 +111,7 @@ class CrossChatH:
 
     def select_partitions(self, max_nvi=0.1, window_size=15, basin_radius=15, lr = "L"):
         """
-        Select the desired hierarchical clustering.
+        Select the desired hierarchical clustering
 
         :params: lr is "L" (ligand) or "R" (receptor)
         :return: CrossChatH object after selecting partitions 
@@ -161,7 +161,7 @@ class CrossChatH:
         """
         Detect specific ligands and receptors
 
-        :params: is the desired number of specific ligand-receptor pairs
+        :params: topN is the desired number of specific ligand-receptor pairs
         :return: list of specific ligand-receptor pairs
         """        
         L_wilcox_dict = dict()

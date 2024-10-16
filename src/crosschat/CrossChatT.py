@@ -69,6 +69,13 @@ class CrossChatT:
     def Binarization(self,threshold=0):
         #Input to Binarization is normalized but not scaled gene expression matrix
         #Threshold each gene on all cells, throw out the cells with lowest gene expression according to threshold
+        """
+        Binarizes the input gene expression matrix
+
+        :params: threshold is the cutoff percentage to throw out the cells with lowest gene expression according to the threshold
+        :return: the CrossChatT object after binarization
+        """ 
+        
         ncells = self.adata.X.shape[0]
         matrix = self.adata.X
         for i in range(matrix.shape[0]):
@@ -93,7 +100,7 @@ class CrossChatT:
         :params: support_size_threshold keeps genes that are present in more than support_size_threshold cells
         :params: tree_size is the threshold of number of nodes in the tree
         :params: tree_scales is the number of levels in the tree
-        :return:  the CrossChatT object with detected trees
+        :return: the CrossChatT object with detected trees
         """            
 
         #type is l,r, or lr

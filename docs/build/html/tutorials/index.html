@@ -1,19 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>&lt;no title&gt; &#8212; CrossChat 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d1102ebc" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
-    <script src="../_static/documentation_options.js?v=2709fde1"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Part I: CrossChatH" href="CrossChatH_tutorial.html" />
@@ -21,9 +22,8 @@
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -59,9 +59,7 @@
 <li class="toctree-l2"><a class="reference internal" href="CrossChatT_tutorial.html#Draw-CCC-between-detected-trees-of-ligands-or-receptors">Draw CCC between detected trees of ligands or receptors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CrossChatT_tutorial.html#Draw-CCC-between-interacting-ligand-tree-and-receptor-tree">Draw CCC between interacting ligand tree and receptor tree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CrossChatT_tutorial.html#Plot-frequency-of-ligand/receptor-occurrence-in-ligands/receptors-trees">Plot frequency of ligand/receptor occurrence in ligands/receptors trees</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="CrossChatT_tutorial.html#CrossChatT-on-spatial-dataset">CrossChatT on spatial dataset</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CrossChatT_tutorial.html#CrossChatT-on-spatial-dataset">CrossChatT on spatial dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CrossChatT_tutorial.html#id1">Load data and preprocess</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CrossChatT_tutorial.html#Plot-annotations-in-space">Plot annotations in space</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CrossChatT_tutorial.html#Detect-trees-on-spatial-data.">Detect trees on spatial data.</a></li>
@@ -75,7 +73,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">CrossChat</a></h1>
 
@@ -91,7 +89,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../README.html"><em>CrossChat</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="CrossChatH_tutorial.html">Part I: CrossChatH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CrossChatT_tutorial.html">Part II: CrossChatT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="CrossChatT_tutorial.html#CrossChatT-on-spatial-dataset">CrossChatT on spatial dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">crosschat</a></li>
 </ul>
 
@@ -104,7 +101,7 @@
   </ul></li>
 </ul>
 </div>
-<search id="searchbox" style="display: none" role="search">
+<div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -112,7 +109,7 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</search>
+</div>
 <script>document.getElementById('searchbox').style.display = "block"</script>
 
 
@@ -127,11 +124,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2024, Xinyi Wang.
+      &copy;2024, Xinyi Wang.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |
       <a href="../_sources/tutorials/index.rst.txt"
