@@ -1,6 +1,6 @@
 # *CrossChat*
 
-This ``python`` package is designed to detect and analyze hierarchical structures within cell-cell communications (CCC).
+This ``python`` package is designed to detect and analyze hierarchical structures within cell-cell communications (CCC). Link to the paper can be found here: https://www.nature.com/articles/s41467-024-54821-x. 
 
 ### Installation from GitHub 
 
